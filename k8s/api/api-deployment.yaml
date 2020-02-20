@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: uxioandrade/tutorial-api
+          image: adamdevigili/balancer.team-api:latest
           ports:
             - containerPort: 8080
           env:
