@@ -1,0 +1,1 @@
+[![Build Status](https://cloud.drone.io/api/badges/adamdevigili/balancer.team/status.svg)](https://cloud.drone.io/adamdevigili/balancer.team)
