@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/lib/pq"
 )
 
 func main() {
@@ -13,5 +14,6 @@ func main() {
 			"message": "the future home of balancer.team",
 		})
 	})
+
 	r.Run()
 }

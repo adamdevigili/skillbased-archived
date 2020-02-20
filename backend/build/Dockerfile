@@ -1,4 +1,3 @@
-
 FROM golang:latest
 
 ENV GO111MODULE=on
@@ -10,4 +9,4 @@ COPY ./go.mod .
 RUN go mod download
 
 COPY . .
-CMD ["go", "run", "main.go"]
+CMD ["go", "run", "cmd/main.go"]
