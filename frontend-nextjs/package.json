@@ -1,22 +1,20 @@
 {
   "name": "frontend-nextjs",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "dev": "next",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "isomorphic-unfetch": "^3.0.0",
-    "next": "^9.2.2",
-    "react": "^16.13.0",
-    "react-dom": "^16.13.0",
-    "react-markdown": "^4.3.1",
-    "swr": "^0.1.18"
+    "next": "^9.3.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "devDependencies": {
+    "@types/node": "^13.9.3",
+    "@types/react": "^16.9.25",
+    "typescript": "^3.8.3"
   }
 }
