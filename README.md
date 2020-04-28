@@ -1,2 +1,3 @@
-[![Build Status](https://cloud.drone.io/api/badges/adamdevigili/balancer.team/status.svg)](https://cloud.drone.io/adamdevigili/balancer.team)
+[![buddy pipeline](https://app.buddy.works/adamdevigili/balancer-team/pipelines/pipeline/253191/badge.svg?token=6af860b4faa5eaa8778be3f27b4ae51cac868735dbb8ca31c1896056df2e32bd "buddy pipeline")](https://app.buddy.works/adamdevigili/balancer-team/pipelines/pipeline/253191)
+
 [![Go Report Card](https://goreportcard.com/badge/github.com/adamdevigili/balancer.team)](https://goreportcard.com/report/github.com/adamdevigili/balancer.team)
