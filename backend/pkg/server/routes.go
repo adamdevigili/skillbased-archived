@@ -24,6 +24,7 @@ func InitRoutes(e *echo.Echo) {
 	e.POST("/teams/generate", h.GenerateTeams)
 
 	// Sports
+	e.GET("/sports", h.ListSports)
 	e.POST("/sports", h.CreateSport)
 
 	// Players
