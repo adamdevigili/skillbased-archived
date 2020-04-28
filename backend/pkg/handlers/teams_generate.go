@@ -4,13 +4,11 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/Pallinder/go-randomdata"
 	"github.com/adamdevigili/balancer.team/pkg/core"
 	"github.com/adamdevigili/balancer.team/pkg/db"
 	"github.com/adamdevigili/balancer.team/pkg/models"
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/log"
-	"github.com/rs/xid"
 )
 
 func (h *Handler) GenerateTeams(c echo.Context) error {
@@ -42,15 +40,5 @@ func (h *Handler) GenerateTeams(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, e)
 	}
 
-	teams := core.GenerateTeams(t.Players, *sport, t.NumberOfTeams)
-
-	// Initialize the teams with new IDs, names, set their sports, and store them in memory
-	for i := range teams {
-		teams[i].Sport = *sport
-		teams[i].ID = xid.New().String()
-		teams[i].Name = randomdata.SillyName()
-		db.TeamsMem[teams[i].ID] = &teams[i]
-	}
-
-	return c.JSON(http.StatusCreated, teams)
+	return c.JSON(http.StatusCreated, core.GenerateTeams(*t, *sport))
 }

@@ -3,6 +3,9 @@ package core
 import (
 	"fmt"
 	"sort"
+	"time"
+
+	"github.com/Pallinder/go-randomdata"
 
 	"github.com/adamdevigili/balancer.team/pkg/db"
 	"github.com/adamdevigili/balancer.team/pkg/models"
@@ -10,35 +13,38 @@ import (
 	"github.com/rs/xid"
 )
 
-func GenerateTeams(players []models.Player, sport models.Sport, numberOfTeams int) []models.Team {
+func GenerateTeams(req models.GenerateTeamRequest, sport models.Sport) models.TeamSet {
+	numberOfTeams := req.NumberOfTeams
+	players := req.Players
+
 	teams := make([]models.Team, numberOfTeams)
 
 	// Calculate power score for every player provided. If an ID was provided, check if that player has existing stats
 	// for the target sport. Otherwise, generate for that player and update their entry.
-	for i := range players {
-		if players[i].ID == "" {
-			players[i].PowerScores = map[string]float32{}
-			players[i].PowerScores[sport.ID] = calcPlayerPowerScoreForSport(players[i], sport)
-			players[i].ID = xid.New().String()
-			db.PlayersMem[players[i].ID] = &players[i]
-			log.Info(fmt.Sprintf("%s player score: %f", players[i].Name, players[i].PowerScores[sport.ID]))
+	for _, player := range players {
+		if player.ID == "" {
+			player.PowerScores = map[string]float32{}
+			player.PowerScores[sport.ID] = calcPlayerPowerScoreForSport(player, sport)
+			player.ID = xid.New().String()
+			db.PlayersMem[player.ID] = &player
+			log.Info(fmt.Sprintf("%s player score: %f", player.Name, player.PowerScores[sport.ID]))
 		} else {
-			player, ok := db.PlayersMem[players[i].ID]
+			player, ok := db.PlayersMem[player.ID]
 			if !ok {
-				log.Warn(fmt.Sprintf("provided ID %s not present", players[i].ID))
+				log.Warn(fmt.Sprintf("provided ID %s not present", player.ID))
 			} else {
 				if _, ok := player.PowerScores[sport.ID]; !ok {
-					players[i].PowerScores[sport.ID] = calcPlayerPowerScoreForSport(players[i], sport)
+					player.PowerScores[sport.ID] = calcPlayerPowerScoreForSport(*player, sport)
 				} else {
-					log.Warn(fmt.Sprintf("provided ID %s doesn't have stats for target sport", players[i].ID))
+					log.Warn(fmt.Sprintf("provided ID %s doesn't have stats for target sport", player.ID))
 				}
 			}
 		}
 	}
 
 	// Sort all players by power score (descending)
-	sort.Slice(players, func(i, j int) bool {
-		return players[i].PowerScores[sport.ID] > players[j].PowerScores[sport.ID]
+	sort.Slice(req.Players, func(i, j int) bool {
+		return req.Players[i].PowerScores[sport.ID] > req.Players[j].PowerScores[sport.ID]
 	})
 
 	// Iterate over sorted list, adding players to different teams
@@ -52,7 +58,21 @@ func GenerateTeams(players []models.Player, sport models.Sport, numberOfTeams in
 		}
 	}
 
-	return teams
+	for i := range teams {
+		teams[i].Sport = sport
+		teams[i].ID = xid.New().String()
+		teams[i].Name = randomdata.SillyName()
+		teams[i].CreatedAt = time.Now()
+		db.TeamsMem[teams[i].ID] = &teams[i]
+	}
+
+	return models.TeamSet{
+		Name:      req.Name,
+		ID:        xid.New().String(),
+		Teams:     teams,
+		Sport:     sport,
+		CreatedAt: time.Now(),
+	}
 }
 
 func calcPlayerPowerScoreForSport(player models.Player, sport models.Sport) float32 {
