@@ -3,11 +3,11 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/adamdevigili/balancer.team/pkg/constants"
+	"github.com/adamdevigili/skillbased.io/pkg/constants"
 
-	"github.com/adamdevigili/balancer.team/pkg/db"
-	"github.com/adamdevigili/balancer.team/pkg/models"
-	"github.com/labstack/echo"
+	"github.com/adamdevigili/skillbased.io/pkg/db"
+	"github.com/adamdevigili/skillbased.io/pkg/models"
+	"github.com/labstack/echo/v4"
 )
 
 func (h *Handler) GetSport(c echo.Context) error {
