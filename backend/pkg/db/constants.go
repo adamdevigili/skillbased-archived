@@ -1,7 +1,7 @@
 package db
 
 import (
-	"github.com/adamdevigili/balancer.team/pkg/models"
+	"github.com/adamdevigili/skillbased.io/pkg/models"
 )
 
 // Temporary in-memory data store

@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/adamdevigili/balancer.team/pkg/server"
+	"github.com/adamdevigili/skillbased.io/pkg/server"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 type (

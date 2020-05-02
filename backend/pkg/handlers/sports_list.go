@@ -3,9 +3,9 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/adamdevigili/balancer.team/pkg/db"
-	"github.com/adamdevigili/balancer.team/pkg/models"
-	"github.com/labstack/echo"
+	"github.com/adamdevigili/skillbased.io/pkg/db"
+	"github.com/adamdevigili/skillbased.io/pkg/models"
+	"github.com/labstack/echo/v4"
 )
 
 func (h *Handler) ListSports(c echo.Context) error {

@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"github.com/adamdevigili/balancer.team/pkg/constants"
+	"github.com/adamdevigili/skillbased.io/pkg/constants"
 	"github.com/google/uuid"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 func RequestIDMiddleware() echo.MiddlewareFunc {

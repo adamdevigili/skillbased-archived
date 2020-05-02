@@ -7,8 +7,8 @@ import (
 
 	"github.com/Pallinder/go-randomdata"
 
-	"github.com/adamdevigili/balancer.team/pkg/db"
-	"github.com/adamdevigili/balancer.team/pkg/models"
+	"github.com/adamdevigili/skillbased.io/pkg/db"
+	"github.com/adamdevigili/skillbased.io/pkg/models"
 	"github.com/labstack/gommon/log"
 	"github.com/rs/xid"
 )

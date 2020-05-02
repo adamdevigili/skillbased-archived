@@ -1,11 +1,11 @@
 package server
 
 import (
-	"github.com/adamdevigili/balancer.team/pkg/middleware"
-	"github.com/labstack/echo"
-	echomiddleware "github.com/labstack/echo/middleware"
+	"github.com/adamdevigili/skillbased.io/pkg/middleware"
+	"github.com/labstack/echo/v4"
+	echomiddleware "github.com/labstack/echo/v4/middleware"
 
-	"github.com/adamdevigili/balancer.team/pkg/handlers"
+	"github.com/adamdevigili/skillbased.io/pkg/handlers"
 )
 
 func InitRoutes(e *echo.Echo) {
