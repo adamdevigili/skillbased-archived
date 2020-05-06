@@ -32,13 +32,15 @@ func (h *Handler) GenerateTeams(c echo.Context) error {
 		e := models.Errors{Errors: []models.Error{
 			{
 				Status:    http.StatusBadRequest,
-				Title:     fmt.Sprintf("team with id %s not found", t.SportID),
+				Title:     fmt.Sprintf("sport with id %s not found", t.SportID),
 				Detail:    "please check the provided ID is correct and try again",
 				RequestID: c.Request().Header.Get(echo.HeaderXRequestID),
 			},
 		}}
 		return c.JSON(http.StatusBadRequest, e)
 	}
+
+	
 
 	return c.JSON(http.StatusCreated, core.GenerateTeams(*t, *sport))
 }

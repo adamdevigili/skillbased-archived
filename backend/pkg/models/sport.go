@@ -10,14 +10,16 @@ type Sport struct {
 }
 
 var (
-	UltimateFrisbee = Sport{
-		Name: "Ultimate Frisbee",
-		ID:   "ultimate-id", //xid.New().String(),
-		SkillWeights: SkillWeightMap{
-			"handling": 0.9,
-			"speed":    0.8,
-			"stamina":  0.8,
-			"height":   0.4,
+	InitialSports = []Sport{
+		{
+			Name: "Ultimate Frisbee",
+			ID:   "ultimate-id", //xid.New().String(),
+			SkillWeights: SkillWeightMap{
+				"handling": 0.9,
+				"speed":    0.8,
+				"stamina":  0.8,
+				"height":   0.4,
+			},
 		},
 	}
 )
