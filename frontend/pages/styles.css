@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+.centered {
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+	color: #f9f7f7;
+	background-color: #112d4e;
+	font-family: 'Bebas Neue', cursive;
+}
+
+.title {
+	font-size: xx-large;
+}
+
+.go_button {
+	margin: 35%;
+}
+
+.sport_dropdown {
+	color: gray;
+	font-size: large;
+}
+
+.border {
+	border: 1px solid black;
+	padding: 5px;
+}
+
+.wrapper {
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: flex-start;
+}
+
+.row {
+	display: flex;
+	width: 100%;
+	margin: 5px 0 5px 0;
+}
+
+.row > p {
+	word-break: break-word;
+}
+
+.row > img {
+	margin-right: 15px;
+}
