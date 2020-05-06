@@ -7,6 +7,6 @@ import (
 // Temporary in-memory data store
 var (
 	TeamsMem   = map[string]*models.Team{}
-	SportsMem  = map[string]*models.Sport{"ultimate-id": &models.UltimateFrisbee}
+	SportsMem  = map[string]*models.Sport{}
 	PlayersMem = map[string]*models.Player{}
 )

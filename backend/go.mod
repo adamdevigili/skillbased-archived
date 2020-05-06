@@ -6,8 +6,11 @@ require (
 	github.com/Pallinder/go-randomdata v1.2.0
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/google/uuid v1.1.1
+	github.com/jackc/pgx v3.6.2+incompatible
 	github.com/labstack/echo/v4 v4.1.16
 	github.com/labstack/gommon v0.3.0
+	github.com/lib/pq v1.5.1
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rs/xid v1.2.1
-	golang.org/x/crypto v0.0.0-20200320181102-891825fb96df // indirect
+	golang.org/x/crypto v0.0.0-20200429183012-4b2356b1ed79 // indirect
 )

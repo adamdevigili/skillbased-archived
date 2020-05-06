@@ -2,19 +2,22 @@ package server
 
 import (
 	"github.com/adamdevigili/skillbased.io/pkg/middleware"
+	"github.com/jackc/pgx"
 	"github.com/labstack/echo/v4"
 	echomiddleware "github.com/labstack/echo/v4/middleware"
 
 	"github.com/adamdevigili/skillbased.io/pkg/handlers"
 )
 
-func InitRoutes(e *echo.Echo) {
+func InitRoutes(e *echo.Echo, dbConn *pgx.ConnPool) {
 	// Middleware
 	e.Use(middleware.RequestIDMiddleware())
 	e.Use(echomiddleware.Logger())
 	e.Use(echomiddleware.Recover())
 
-	h := &handlers.Handler{}
+	h := &handlers.Handler{
+		DBConn: dbConn,
+	}
 
 	// Teams
 	e.POST("/teams", h.CreateTeam)
