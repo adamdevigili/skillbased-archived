@@ -20,10 +20,19 @@ spec:
             - containerPort: 8080
           env:
             - name: PG_HOST
-              value: postgres-cluster-ip-service
+              value: skillbased-pg-postgresql
             - name: PG_PORT
               value: '5432'
-            - name: PGUSER
+            - name: PG_USER
               value: postgres
-            - name: PGDATABASE
-              value: postgres
+            - name: PG_DATABASE
+              value: skillbased
+            - name: PG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-password
+                  key: postgresql-password
+      volumes:
+        - name: secret-volume
+          secret:
+            secretName: skillbased-pg-postgresql
