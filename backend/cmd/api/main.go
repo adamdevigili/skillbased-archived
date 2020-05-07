@@ -16,6 +16,6 @@ func main() {
 	e.Static("/", "./static")
 
 	// Start server
-	e.Logger.Fatal(e.Start(":8081"))
+	e.Logger.Fatal(e.Start(":8080"))
 
 }
