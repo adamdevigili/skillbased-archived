@@ -13,8 +13,15 @@ const (
 	sportTableName = "sports"
 )
 
+const (
+	duplicateKeyError   = "duplicate key value violates unique constraint"
+	duplicateTableError = "already exists"
+)
+
 func CreateSportsTable(conn *pgx.ConnPool) error {
-	if _, err := conn.Exec(`CREATE TABLE sports(id VARCHAR(50), name VARCHAR(50));`); err != nil {
+	if _, err := conn.Exec(
+		fmt.Sprintf(`CREATE TABLE %s(id VARCHAR(50) UNIQUE PRIMARY KEY, name VARCHAR(50));`, sportTableName),
+	); err != nil {
 		if strings.Contains(err.Error(), "already exists") {
 			log.Info("sports table already exists")
 			return nil
@@ -23,7 +30,7 @@ func CreateSportsTable(conn *pgx.ConnPool) error {
 		}
 	}
 
-	log.Info("successfully created the sports table")
+	log.Info(fmt.Sprintf("successfully created the %s table", sportTableName))
 
 	return nil
 }

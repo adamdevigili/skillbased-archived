@@ -1,5 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
+html *
+{
+	font-family: 'Bebas Neue';
+}
+
+h1 {
+	font-size: 3.5em;
+}
+
+h3 {
+	font-size: 1.0em;
+	color: #f9f7f7;
+
+
+}
+
 .centered {
 	display: flex;
 	flex-flow: column nowrap;
@@ -16,12 +32,11 @@
 }
 
 .go_button {
-	margin: 35%;
+	margin: 10% 35%;
 }
 
 .sport_dropdown {
-	color: gray;
-	font-size: large;
+	font-size: x-large;
 }
 
 .border {
@@ -29,22 +44,3 @@
 	padding: 5px;
 }
 
-.wrapper {
-	display: flex;
-	flex-flow: column nowrap;
-	align-items: flex-start;
-}
-
-.row {
-	display: flex;
-	width: 100%;
-	margin: 5px 0 5px 0;
-}
-
-.row > p {
-	word-break: break-word;
-}
-
-.row > img {
-	margin-right: 15px;
-}
