@@ -30,9 +30,5 @@ spec:
             - name: PG_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: pg-password
+                  name: skillbased-pg-postgresql
                   key: postgresql-password
-      volumes:
-        - name: secret-volume
-          secret:
-            secretName: skillbased-pg-postgresql
