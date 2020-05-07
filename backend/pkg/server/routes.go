@@ -32,5 +32,4 @@ func InitRoutes(e *echo.Echo, dbConn *pgx.ConnPool) {
 
 	// Players
 	e.GET("/players/:id", h.GetPlayer)
-
 }

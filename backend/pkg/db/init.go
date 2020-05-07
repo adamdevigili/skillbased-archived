@@ -54,7 +54,7 @@ func InitDB() *pgx.ConnPool {
 	log.Info("populating sports database with initial values..")
 	for _, s := range models.InitialSports {
 		if err := InsertSport(connPool, &s); err != nil {
-			panic(err)
+			log.Warn(err)
 		}
 	}
 
