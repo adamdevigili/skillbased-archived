@@ -4,10 +4,13 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/labstack/gommon/log"
+
 	"github.com/adamdevigili/skillbased.io/pkg/models"
 
 	"github.com/jackc/pgx"
 
+	"github.com/kelseyhightower/envconfig"
 	_ "github.com/lib/pq"
 )
 
@@ -19,55 +22,44 @@ const (
 	dbname   = "skillbased"
 )
 
-func InitDB(password string) *pgx.ConnPool {
-	fmt.Print(password)
+type dbConfig struct {
+	Host     string `required:"true"`
+	Port     uint16 `required:"true"`
+	User     string `required:"true"`
+	Database string `required:"true"`
+	Password string `required:"true"`
+}
+
+func InitDB() *pgx.ConnPool {
+	var dbConfig dbConfig
+
+	err := envconfig.Process("pg", &dbConfig)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	fmt.Println(fmt.Sprintf("%+v", dbConfig))
 
 	pgxConfig := pgx.ConnPoolConfig{
 		ConnConfig: pgx.ConnConfig{
-			Host:     host,
-			Port:     port,
-			User:     user,
-			Password: password,
-			Database: dbname,
+			Host:     dbConfig.Host,
+			Port:     dbConfig.Port,
+			User:     dbConfig.User,
+			Password: dbConfig.Password,
+			Database: dbConfig.Database,
 		},
 	}
 
 	connPool, err := pgx.NewConnPool(pgxConfig)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		log.Error("Unable to connect to database", err)
 		os.Exit(1)
 	}
-	defer connPool.Close()
 
-	//psqlInfo := fmt.Sprintf(
-	//	"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-	//	host, port, user, password, dbname)
-	//
-	//db, err := sql.Open("postgres", psqlInfo)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//defer db.Close()
-	//
-	//err = db.Ping()
-	//if err != nil {
-	//	panic(err)
-	//}
-
-	fmt.Println(fmt.Sprintf("Successfully connected to database '%s' at %s:%d as user '%s'",
+	log.Info(fmt.Sprintf("Successfully connected to database '%s' at %s:%d as user '%s'",
 		dbname, host, port, user))
 
-	var id string
-	var name string
-
-	err = connPool.QueryRow(SelectSportQuery("12345")).Scan(&id, &name)
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println(id)
-	fmt.Println(name)
-	fmt.Println("Populating database with initial values..")
+	log.Info("Populating database with initial values..")
 
 	//connPool.Exec(InsertSportQuery(s.ID, s.Name))
 	for _, s := range models.InitialSports {

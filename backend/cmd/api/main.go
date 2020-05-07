@@ -1,9 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/adamdevigili/skillbased.io/pkg/db"
 	"github.com/adamdevigili/skillbased.io/pkg/server"
 
@@ -11,10 +8,7 @@ import (
 )
 
 func main() {
-	fmt.Println(os.Args[1])
-
-	dbPassword := os.Args[1]
-	dbConn := db.InitDB(dbPassword)
+	dbConn := db.InitDB()
 
 	e := echo.New()
 
