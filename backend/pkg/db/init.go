@@ -4,24 +4,14 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/labstack/gommon/log"
-
 	"github.com/adamdevigili/skillbased.io/pkg/models"
-
 	"github.com/jackc/pgx"
-
 	"github.com/kelseyhightower/envconfig"
+	"github.com/labstack/gommon/log"
 	_ "github.com/lib/pq"
 )
 
-const (
-	host     = "localhost" // "skillbased-pg-postgresql"
-	port     = 5432
-	user     = "postgres"
-	password = "elite360" //"Z17YBnZk9I"
-	dbname   = "skillbased"
-)
-
+// Environment variables to configure target DB. All are required. Will be looked for with the "PG_" prefix
 type dbConfig struct {
 	Host     string `required:"true"`
 	Port     uint16 `required:"true"`
@@ -37,8 +27,6 @@ func InitDB() *pgx.ConnPool {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-
-	fmt.Println(fmt.Sprintf("%+v", dbConfig))
 
 	pgxConfig := pgx.ConnPoolConfig{
 		ConnConfig: pgx.ConnConfig{
@@ -56,12 +44,14 @@ func InitDB() *pgx.ConnPool {
 		os.Exit(1)
 	}
 
-	log.Info(fmt.Sprintf("Successfully connected to database '%s' at %s:%d as user '%s'",
-		dbname, host, port, user))
+	log.Info(fmt.Sprintf(
+		"successfully connected to database '%s' at %s:%d as user '%s'",
+		dbConfig.Database, dbConfig.Host, dbConfig.Port, dbConfig.User,
+	))
 
-	log.Info("Populating database with initial values..")
+	CreateSportsTable(connPool)
 
-	//connPool.Exec(InsertSportQuery(s.ID, s.Name))
+	log.Info("populating sports database with initial values..")
 	for _, s := range models.InitialSports {
 		if err := InsertSport(connPool, &s); err != nil {
 			panic(err)

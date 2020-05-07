@@ -2,30 +2,46 @@ package db
 
 import (
 	"fmt"
-
-	"github.com/jackc/pgx"
+	"strings"
 
 	"github.com/adamdevigili/skillbased.io/pkg/models"
+	"github.com/jackc/pgx"
+	"github.com/labstack/gommon/log"
 )
+
+const (
+	sportTableName = "sports"
+)
+
+func CreateSportsTable(conn *pgx.ConnPool) error {
+	if _, err := conn.Exec(`CREATE TABLE sports(id VARCHAR(50), name VARCHAR(50));`); err != nil {
+		if strings.Contains(err.Error(), "already exists") {
+			log.Info("sports table already exists")
+			return nil
+		} else {
+			return err
+		}
+	}
+
+	log.Info("successfully created the sports table")
+
+	return nil
+}
 
 func InsertSport(conn *pgx.ConnPool, sport *models.Sport) error {
 	if _, err := conn.Exec(InsertSportQuery(sport.ID, sport.Name)); err != nil {
 		return err
 	}
 
-	fmt.Println(fmt.Sprintf("succesfully stored sport '%s' in the database", sport.Name))
+	log.Info(fmt.Sprintf("succesfully stored sport '%s' in the database", sport.Name))
 
 	return nil
 }
 
+func InsertSportQuery(id, name string) (string, string, string) {
+	return fmt.Sprintf(`INSERT INTO %s(id, name) VALUES ($1, $2)`, sportTableName), id, name
+}
+
 func ConvertSportToRow(sport *models.Sport) {
 
-}
-
-func SelectSportQuery(id string) string {
-	return fmt.Sprintf("SELECT * FROM sports WHERE id='%s';", id)
-}
-
-func InsertSportQuery(id, name string) (string, string, string) {
-	return `insert into sports(id, name) values ($1, $2)`, id, name
 }
