@@ -4,17 +4,15 @@ version: '2'
 services:
   skillbased-api:
     container_name: skillbased-api
-    build:
-      context: ..
-      dockerfile: Dockerfile
+    image: adamdevigili/balancer.team-api:latest
     ports:
     - "127.0.0.1:8080:8080"
     environment:
-      PG_HOST: "localhost"
+      PG_HOST: localhost
       PG_PORT: 5432
-      PG_USER: "user"
-      PG_PASSWORD: "ball"
-      PG_DATABASE: "skillbased"
+      PG_USER: user
+      PG_PASSWORD: ball
+      PG_DATABASE: skillbased
 
 
   postgres:
@@ -25,4 +23,4 @@ services:
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: ball
-      POSTGRES_DB: vpnaas
+      POSTGRES_DB: skillbased

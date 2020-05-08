@@ -4,6 +4,8 @@
 
 [skillbased.io](http://skillbased.io) is a service that is aimed to provide players of casual, "pick-up" type sports to quickly and easily create balanced teams for their activity, and save those teams to create elevated levels of competition.
 
+Deploy locally with: `docker-compose -f deploy/compose/docker-compose.yml up --build`
+
 ## Tech
 ### Stack
 - Frontend: [NextJS](https://nextjs.org/)
