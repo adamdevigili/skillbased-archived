@@ -1,0 +1,39 @@
+
+version: '2'
+
+services:
+  skillbased-backend:
+    container_name: skillbased-backend
+    # Use this if you want to run against upstream latest image
+    # image: adamdevigili/balancer.team-api:latest
+    build:
+      context: ../../backend
+      dockerfile: Dockerfile
+    ports:
+    - "127.0.0.1:8080:8080"
+    environment:
+      PG_HOST: postgres
+      PG_PORT: 5432
+      PG_USER: user
+      PG_PASSWORD: ball
+      PG_DATABASE: skillbased
+
+  skillbased-frontend:
+    container_name: skillbased-frontend
+    # Use this if you want to run against upstream latest image
+    # image: adamdevigili/balancer.team-frontend:latest
+    build:
+      context: ../../frontend
+      dockerfile: Dockerfile
+    ports:
+    - "127.0.0.1:3000:3000"
+
+  postgres:
+    restart: always
+    image: postgres
+    ports:
+      - 127.0.0.1:5432:5432
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: ball
+      POSTGRES_DB: skillbased
