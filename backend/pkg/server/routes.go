@@ -1,6 +1,9 @@
 package server
 
 import (
+	"fmt"
+
+	"github.com/adamdevigili/skillbased.io/pkg/constants"
 	"github.com/adamdevigili/skillbased.io/pkg/middleware"
 	"github.com/jackc/pgx"
 	"github.com/labstack/echo/v4"
@@ -21,16 +24,17 @@ func InitRoutes(e *echo.Echo, dbConn *pgx.ConnPool) {
 
 	// Teams
 	e.POST("/teams", h.CreateTeam)
-	e.GET("/teams/:id", h.GetTeam)
-	e.DELETE("/teams/:id", h.DeleteTeam)
+	e.GET(fmt.Sprintf("/teams/:%s", constants.URIKeyID), h.GetTeam)
+	e.DELETE(fmt.Sprintf("/teams/:%s", constants.URIKeyID), h.DeleteTeam)
 
 	e.POST("/teams/generate", h.GenerateTeams)
 
 	// Sports
-	e.GET("/sports", h.ListSports)
-	e.GET("/sports/:id", h.GetSport)
 	e.POST("/sports", h.CreateSport)
+	e.GET("/sports", h.ListSports)
+	e.GET(fmt.Sprintf("/sports/:%s", constants.URIKeyID), h.GetSport)
+	e.DELETE(fmt.Sprintf("/sports/:%s", constants.URIKeyID), h.DeleteSport)
 
 	// Players
-	e.GET("/players/:id", h.GetPlayer)
+	e.GET(fmt.Sprintf("/players/:%s", constants.URIKeyID), h.GetPlayer)
 }

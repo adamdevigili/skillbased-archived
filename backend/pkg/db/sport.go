@@ -19,12 +19,12 @@ const (
 )
 
 /* Create/Insert */
-
+// CreateSportsTable creates the initial table to store sports. Should only be run once at start time
 func CreateSportsTable(conn *pgx.ConnPool) error {
 	if _, err := conn.Exec(
 		fmt.Sprintf(`CREATE TABLE %s(id VARCHAR(50) UNIQUE PRIMARY KEY, name VARCHAR(50));`, sportTableName),
 	); err != nil {
-		if strings.Contains(err.Error(), "already exists") {
+		if strings.Contains(err.Error(), duplicateTableError) {
 			log.Info("sports table already exists")
 			return nil
 		} else {
@@ -38,7 +38,7 @@ func CreateSportsTable(conn *pgx.ConnPool) error {
 }
 
 func InsertSport(conn *pgx.ConnPool, sport *models.Sport) error {
-	if _, err := conn.Exec(InsertSportQuery(sport.ID, sport.Name)); err != nil {
+	if _, err := conn.Exec(insertSportQuery(sport.ID, sport.Name)); err != nil {
 		return err
 	}
 
@@ -47,18 +47,16 @@ func InsertSport(conn *pgx.ConnPool, sport *models.Sport) error {
 	return nil
 }
 
-func InsertSportQuery(id, name string) (string, string, string) {
+func insertSportQuery(id, name string) (string, string, string) {
 	return fmt.Sprintf(`INSERT INTO %s(id, name) VALUES ($1, $2)`, sportTableName), id, name
 }
 
 /* List/Get */
 
 func GetSport(conn *pgx.ConnPool, id string) (*models.Sport, error) {
-	row := conn.QueryRow(GetSportQuery(id))
+	row := conn.QueryRow(getSportQuery(id))
 
-	var (
-		name string
-	)
+	var name string
 
 	err := row.Scan(&id, &name)
 	if err != nil {
@@ -67,17 +65,14 @@ func GetSport(conn *pgx.ConnPool, id string) (*models.Sport, error) {
 	}
 
 	return &models.Sport{ID: id, Name: name}, nil
-
 }
 
-func GetSportQuery(id string) (string, string) {
+func getSportQuery(id string) (string, string) {
 	return fmt.Sprintf(`SELECT * FROM %s WHERE id=$1`, sportTableName), id
 }
 
-/* List/Get */
-
 func ListSports(conn *pgx.ConnPool) (*models.SportList, error) {
-	rows, err := conn.Query(ListSportQuery())
+	rows, err := conn.Query(listSportQuery())
 	if err != nil {
 		return nil, err
 	}
@@ -104,10 +99,27 @@ func ListSports(conn *pgx.ConnPool) (*models.SportList, error) {
 
 }
 
-func ListSportQuery() string {
+func listSportQuery() string {
 	return fmt.Sprintf(`SELECT * FROM %s`, sportTableName)
 }
 
 /* Update */
 
 /* Delete */
+func DeleteSport(conn *pgx.ConnPool, id string) error {
+	row := conn.QueryRow(getSportQuery(id))
+
+	err := row.Scan(&id)
+	if err != nil {
+		log.Error(fmt.Sprintf("sport with id '%s' does not exist in the database", id))
+		return err
+	}
+
+	row = conn.QueryRow(deleteSportQuery(id))
+
+	return nil
+}
+
+func deleteSportQuery(id string) (string, string) {
+	return fmt.Sprintf(`DELETE FROM %s WHERE id=$1`, sportTableName), id
+}

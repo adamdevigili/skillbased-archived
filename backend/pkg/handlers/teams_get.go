@@ -10,7 +10,7 @@ import (
 )
 
 func (h *Handler) GetTeam(c echo.Context) error {
-	id := c.Param("id")
+	id := c.Param(constants.URIKeyID)
 	team, ok := db.TeamsMem[id]
 	if !ok {
 		return c.JSON(http.StatusNotFound, models.GenNotFoundError("team", id, c.Get(constants.RequestIDKey).(string)))
