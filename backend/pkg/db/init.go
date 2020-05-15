@@ -6,6 +6,7 @@ import (
 
 	"github.com/adamdevigili/skillbased.io/pkg/models"
 	"github.com/jackc/pgx"
+	_ "github.com/joho/godotenv/autoload"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/labstack/gommon/log"
 	_ "github.com/lib/pq"

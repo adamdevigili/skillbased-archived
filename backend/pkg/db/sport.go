@@ -106,18 +106,8 @@ func listSportQuery() string {
 /* Update */
 
 /* Delete */
-func DeleteSport(conn *pgx.ConnPool, id string) error {
-	row := conn.QueryRow(getSportQuery(id))
-
-	err := row.Scan(&id)
-	if err != nil {
-		log.Error(fmt.Sprintf("sport with id '%s' does not exist in the database", id))
-		return err
-	}
-
-	row = conn.QueryRow(deleteSportQuery(id))
-
-	return nil
+func DeleteSport(conn *pgx.ConnPool, id string) {
+	conn.QueryRow(deleteSportQuery(id))
 }
 
 func deleteSportQuery(id string) (string, string) {
