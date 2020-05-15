@@ -10,9 +10,9 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (h *Handler) GetSport(c echo.Context) error {
+func (h *Handler) DeleteSport(c echo.Context) error {
 	id := c.Param(constants.URIKeyID)
-	sport, err := db.GetSport(h.DBConn, id)
+	err := db.DeleteSport(h.DBConn, id)
 	if err != nil {
 		return c.JSON(
 			http.StatusNotFound,
@@ -20,5 +20,5 @@ func (h *Handler) GetSport(c echo.Context) error {
 		)
 	}
 
-	return c.JSON(http.StatusOK, sport)
+	return c.NoContent(http.StatusNoContent)
 }

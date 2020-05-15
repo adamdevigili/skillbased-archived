@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/adamdevigili/skillbased.io/pkg/db"
 	"github.com/adamdevigili/skillbased.io/pkg/server"
+	_ "github.com/joho/godotenv/autoload"
 	"github.com/labstack/echo/v4"
 )
 

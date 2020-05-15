@@ -11,7 +11,7 @@ import (
 )
 
 func (h *Handler) GetPlayer(c echo.Context) error {
-	id := c.Param("id")
+	id := c.Param(constants.URIKeyID)
 	player, ok := db.PlayersMem[id]
 	if !ok {
 		return c.JSON(http.StatusNotFound, models.GenNotFoundError("player", id, c.Get(constants.RequestIDKey).(string)))
