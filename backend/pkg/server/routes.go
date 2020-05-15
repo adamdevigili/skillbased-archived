@@ -28,6 +28,7 @@ func InitRoutes(e *echo.Echo, dbConn *pgx.ConnPool) {
 
 	// Sports
 	e.GET("/sports", h.ListSports)
+	e.GET("/sports/:id", h.GetSport)
 	e.POST("/sports", h.CreateSport)
 
 	// Players

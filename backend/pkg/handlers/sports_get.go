@@ -11,10 +11,13 @@ import (
 )
 
 func (h *Handler) GetSport(c echo.Context) error {
-	id := c.Param("id")
-	sport, ok := db.SportsMem[id]
-	if !ok {
-		return c.JSON(http.StatusNotFound, models.GenNotFoundError("sport", id, c.Get(constants.RequestIDKey).(string)))
+	id := c.Param(URIKeyID)
+	sport, err := db.GetSport(h.DBConn, id)
+	if err != nil {
+		return c.JSON(
+			http.StatusNotFound,
+			models.GenNotFoundError("sport", id, c.Get(constants.RequestIDKey).(string)),
+		)
 	}
 
 	return c.JSON(http.StatusOK, sport)
