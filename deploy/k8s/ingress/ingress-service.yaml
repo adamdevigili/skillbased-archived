@@ -13,9 +13,11 @@ spec:
         - backend:
             serviceName: client-service
             servicePort: 3000
+          path: /?(.*)
   - host: api.skillbased.io
     http:
       paths:
         - backend:
             serviceName: api-service
             servicePort: 8080
+          path: /?(.*)

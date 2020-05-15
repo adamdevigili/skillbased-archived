@@ -1,5 +1,6 @@
 import SportsDropdown from '../components/Dropdown';
 import GoButton from '../components/GoButton';
+import Title from '../components/Title';
 
 export default () => (
 	<div className="centered">

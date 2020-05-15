@@ -1,8 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Graduate&display=swap');
 
-html *
-{
+
+html * {
 	font-family: 'Bebas Neue';
+	/*font-family: 'Graduate', cursive;*/
 }
 
 h1 {
