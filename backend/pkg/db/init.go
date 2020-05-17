@@ -6,7 +6,7 @@ import (
 
 	"github.com/adamdevigili/skillbased.io/pkg/models"
 	"github.com/jackc/pgx"
-	_ "github.com/joho/godotenv/autoload"
+	_ "github.com/joho/godotenv/autoload" // Import autoload package to setup env vars for dotenv
 	"github.com/kelseyhightower/envconfig"
 	"github.com/labstack/gommon/log"
 	_ "github.com/lib/pq"
