@@ -1,11 +1,41 @@
-FROM golang:latest
+FROM golang:latest as build-env
+# All these steps will be cached
+WORKDIR /api
 
-ENV GO111MODULE=on
-WORKDIR /app
-COPY ./go.mod .
-RUN go mod download
 COPY . .
-CMD ["go", "run", "cmd/api/main.go"]
+
+# Get dependancies - will also be cached if we won't change mod/sum
+RUN go mod download
+
+RUN go build -o bin/api cmd/api
+
+FROM scratch
+COPY --from=build-env /api /api
+ENTRYPOINT ["./api"]
+
+
+
+
+
+
+
+# --- WORKING ---
+#FROM golang:latest
+#
+#ENV GO111MODULE=on
+#WORKDIR /app
+#COPY ./go.mod .
+#RUN go mod download
+#COPY . .
+#CMD ["go", "run", "cmd/api/main.go"]
+
+
+
+
+
+
+
+
 
 #FROM golang:latest as build-env
 ## All these steps will be cached
