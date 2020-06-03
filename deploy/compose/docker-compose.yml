@@ -5,7 +5,7 @@ services:
   skillbased-backend:
     container_name: skillbased-backend
     # Use this if you want to run against upstream latest image
-    # image: adamdevigili/balancer.team-api:latest
+    #image: adamdevigili/balancer.team-api:latest
     build:
       context: ../../backend
       dockerfile: Dockerfile

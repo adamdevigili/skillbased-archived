@@ -7,13 +7,14 @@ import (
 )
 
 func main() {
+	staticBuildPath := "../frontend/build"
 	dbConn := db.InitDB()
 
 	e := echo.New()
 	server.InitRoutes(e, dbConn)
 
-	// Serve static files for non-operational API calls (browser visits to api subdomain
-	e.Static("/", "./static")
+	// Serve static files for non-operational API calls (browser visits to api subdomain)
+	e.Static("/", staticBuildPath)
 
 	// Start server
 	e.Logger.Fatal(e.Start(":8080"))

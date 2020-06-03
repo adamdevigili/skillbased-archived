@@ -13,28 +13,32 @@ import (
 )
 
 func InitRoutes(e *echo.Echo, dbConn *pgx.ConnPool) {
+	apiGroup := e.Group("/api")
+
 	// Middleware
-	e.Use(middleware.RequestIDMiddleware())
-	e.Use(echomiddleware.Logger())
-	e.Use(echomiddleware.Recover())
+	apiGroup.Use(middleware.RequestIDMiddleware())
+	apiGroup.Use(echomiddleware.Logger())
+	apiGroup.Use(echomiddleware.Recover())
 
 	h := &handlers.Handler{
 		DBConn: dbConn,
 	}
 
-	// Teams
-	e.POST("/teams", h.CreateTeam)
-	e.GET(fmt.Sprintf("/teams/:%s", constants.URIKeyID), h.GetTeam)
-	e.DELETE(fmt.Sprintf("/teams/:%s", constants.URIKeyID), h.DeleteTeam)
+	apiGroup.GET("/health", h.Health)
 
-	e.POST("/teams/generate", h.GenerateTeams)
+	// Teams
+	apiGroup.POST("/teams", h.CreateTeam)
+	apiGroup.GET(fmt.Sprintf("/teams/:%s", constants.URIKeyID), h.GetTeam)
+	apiGroup.DELETE(fmt.Sprintf("/teams/:%s", constants.URIKeyID), h.DeleteTeam)
+
+	apiGroup.POST("/teams/generate", h.GenerateTeams)
 
 	// Sports
-	e.POST("/sports", h.CreateSport)
-	e.GET("/sports", h.ListSports)
-	e.GET(fmt.Sprintf("/sports/:%s", constants.URIKeyID), h.GetSport)
-	e.DELETE(fmt.Sprintf("/sports/:%s", constants.URIKeyID), h.DeleteSport)
+	apiGroup.POST("/sports", h.CreateSport)
+	apiGroup.GET("/sports", h.ListSports)
+	apiGroup.GET(fmt.Sprintf("/sports/:%s", constants.URIKeyID), h.GetSport)
+	apiGroup.DELETE(fmt.Sprintf("/sports/:%s", constants.URIKeyID), h.DeleteSport)
 
 	// Players
-	e.GET(fmt.Sprintf("/players/:%s", constants.URIKeyID), h.GetPlayer)
+	apiGroup.GET(fmt.Sprintf("/players/:%s", constants.URIKeyID), h.GetPlayer)
 }

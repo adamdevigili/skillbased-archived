@@ -2,9 +2,9 @@ import React from 'react';
 import { Dropdown } from 'semantic-ui-react';
 
 const sportOptions = [
-	{ key: 'uf', value: 'uf', text: 'Ultimate Frisbee' },
-	{ key: 'bb', value: 'bb', text: 'Basketball' },
-	{ key: 'fb', value: 'fb', text: 'Football' }
+	{text: 'Ultimate Frisbee' },
+	{text: 'Basketball' },
+	{text: 'Football' }
 ];
 
 const SportsDropdown = () => (
