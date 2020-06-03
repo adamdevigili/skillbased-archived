@@ -4,8 +4,11 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/jinzhu/gorm"
+
 	"github.com/adamdevigili/skillbased.io/pkg/models"
 	"github.com/jackc/pgx"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/joho/godotenv/autoload" // Import autoload package to setup env vars for dotenv
 	"github.com/kelseyhightower/envconfig"
 	"github.com/labstack/gommon/log"
@@ -49,6 +52,15 @@ func InitDB() *pgx.ConnPool {
 		"successfully connected to database '%s' at %s:%d as user '%s'",
 		dbConfig.Database, dbConfig.Host, dbConfig.Port, dbConfig.User,
 	))
+
+	db, err := gorm.Open(
+		"postgres",
+		fmt.Sprintf(
+			"host=%s port=%s user=%s dbname=%s password=%s",
+			dbConfig.Host, dbConfig.Port, dbConfig.User, dbConfig.Database, dbConfig.Password,
+		),
+	)
+	defer db.Close()
 
 	CreateSportsTable(connPool)
 

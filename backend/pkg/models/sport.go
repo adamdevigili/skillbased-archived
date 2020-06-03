@@ -1,8 +1,14 @@
 package models
 
+import (
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
+)
+
 type SkillWeightMap map[string]float32
 
 type Sport struct {
+	gorm.Model
 	Name              string         `json:"name"`
 	ID                string         `json:"id"`
 	SkillWeights      SkillWeightMap `json:"skills"`
