@@ -18,15 +18,13 @@ services:
       PG_PASSWORD: ball
       PG_DATABASE: skillbased
 
-  skillbased-frontend:
-    container_name: skillbased-frontend
-    # Use this if you want to run against upstream latest image
-    # image: adamdevigili/balancer.team-frontend:latest
+  skillbased-nginx-react:
+    container_name: skillbased-nginx-react
     build:
       context: ../../frontend
       dockerfile: Dockerfile
     ports:
-    - "127.0.0.1:3000:3000"
+    - "127.0.0.1:80:80"
 
   postgres:
     restart: always
