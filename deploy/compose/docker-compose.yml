@@ -11,7 +11,7 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: test
       POSTGRES_DB: skillbased
-      
+
   skillbased-backend:
     container_name: skillbased-backend
     # Use this if you want to run against upstream latest image
