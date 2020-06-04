@@ -44,7 +44,7 @@ func InitDB() *pgx.ConnPool {
 
 	connPool, err := pgx.NewConnPool(pgxConfig)
 	if err != nil {
-		log.Error("Unable to connect to database", err)
+		log.Errorf("Unable to connect to database", err)
 		os.Exit(1)
 	}
 
