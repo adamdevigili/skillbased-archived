@@ -1,10 +1,8 @@
 package db
 
 import (
-	"fmt"
+	"crypto/tls"
 	"time"
-
-	"github.com/jinzhu/gorm"
 
 	"github.com/adamdevigili/skillbased.io/pkg/models"
 	"github.com/jackc/pgx"
@@ -38,6 +36,9 @@ func InitDB() *pgx.ConnPool {
 
 	pgxConfig := pgx.ConnPoolConfig{
 		ConnConfig: pgx.ConnConfig{
+			TLSConfig: &tls.Config{
+				InsecureSkipVerify: true,
+			},
 			Host:     dbConfig.Host,
 			Port:     dbConfig.Port,
 			User:     dbConfig.User,
@@ -46,35 +47,46 @@ func InitDB() *pgx.ConnPool {
 		},
 	}
 
+	log.Infof("Attempting to connect to database '%s' at %s:%d as user '%s'",
+		dbConfig.Database, dbConfig.Host, dbConfig.Port, dbConfig.User,
+	)
+
 	var connPool *pgx.ConnPool
-	for i := 0; i <= dbConnRetryLimit; i++ {
+	for i := 1; i <= dbConnRetryLimit; i++ {
 		connPool, err = pgx.NewConnPool(pgxConfig)
 		if err != nil {
-			log.Warnf("Unable to connect to database", err)
+			log.Warnf("Unable to connect to database %v. Retries remaining: %d", err, dbConnRetryLimit-i)
+		} else {
+			break
 		}
+
 		if i == dbConnRetryLimit {
-			log.Panic("Maximum number of retries to establish database connection reached")
+			log.Fatal("Maximum number of retries to establish database connection reached, exiting")
 		}
-		time.Sleep(time.Duration(1 * time.Minute))
+
+		time.Sleep(15 * time.Second)
 	}
 
-	log.Info(fmt.Sprintf(
-		"successfully connected to database '%s' at %s:%d as user '%s'",
-		dbConfig.Database, dbConfig.Host, dbConfig.Port, dbConfig.User,
-	))
+	if connPool != nil {
+		log.Infof("Successfully connected to database '%s' at %s:%d as user '%s'",
+			dbConfig.Database, dbConfig.Host, dbConfig.Port, dbConfig.User,
+		)
+	} else {
+		log.Fatal("Could not connect to database, exiting")
+	}
 
-	db, err := gorm.Open(
-		"postgres",
-		fmt.Sprintf(
-			"host=%s port=%s user=%s dbname=%s password=%s",
-			dbConfig.Host, dbConfig.Port, dbConfig.User, dbConfig.Database, dbConfig.Password,
-		),
-	)
-	defer db.Close()
+	//db, err := gorm.Open(
+	//	"postgres",
+	//	fmt.Sprintf(
+	//		"host=%s port=%s user=%s dbname=%s password=%s",
+	//		dbConfig.Host, dbConfig.Port, dbConfig.User, dbConfig.Database, dbConfig.Password,
+	//	),
+	//)
+	//defer db.Close()
 
 	CreateSportsTable(connPool)
 
-	log.Info("populating sports database with initial values..")
+	log.Info("Populating sports database with initial values..")
 	for _, s := range models.InitialSports {
 		if err := InsertSport(connPool, &s); err != nil {
 			log.Warn(err)

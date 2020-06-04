@@ -1,6 +1,7 @@
 .idea/
 .DS_Store
 .vscode/
+.swp
 
 # next.js build output
 .next
