@@ -2,7 +2,6 @@ package db
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/jinzhu/gorm"
 
@@ -13,6 +12,10 @@ import (
 	"github.com/kelseyhightower/envconfig"
 	"github.com/labstack/gommon/log"
 	_ "github.com/lib/pq"
+)
+
+const (
+	dbConnRetryLimit = 5
 )
 
 // Environment variables to configure target DB. All are required. Will be looked for with the "PG_" prefix
@@ -42,10 +45,15 @@ func InitDB() *pgx.ConnPool {
 		},
 	}
 
-	connPool, err := pgx.NewConnPool(pgxConfig)
-	if err != nil {
-		log.Errorf("Unable to connect to database", err)
-		os.Exit(1)
+	var connPool *pgx.ConnPool
+	for i := 0; i <= dbConnRetryLimit; i++ {
+		connPool, err = pgx.NewConnPool(pgxConfig)
+		if err != nil {
+			log.Warnf("Unable to connect to database", err)
+		}
+		if i == dbConnRetryLimit {
+			log.Panic("Maximum number of retries to establish database connection reached")
+		}
 	}
 
 	log.Info(fmt.Sprintf(
