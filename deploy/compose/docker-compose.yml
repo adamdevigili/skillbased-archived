@@ -2,6 +2,16 @@
 version: '2'
 
 services:
+  postgres:
+    restart: always
+    image: postgres
+    ports:
+      - 127.0.0.1:5432:5432
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: skillbased
+      
   skillbased-backend:
     container_name: skillbased-backend
     # Use this if you want to run against upstream latest image
@@ -26,12 +36,4 @@ services:
     ports:
     - "127.0.0.1:80:80"
 
-  postgres:
-    restart: always
-    image: postgres
-    ports:
-      - 127.0.0.1:5432:5432
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: test
-      POSTGRES_DB: skillbased
+
