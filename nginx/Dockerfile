@@ -1,13 +1,19 @@
 FROM node:10-alpine as builder
 
 # copy the package.json to install dependencies
-COPY ../frontend/package.json ../frontend/package-lock.json ./
+#RUN mkdir skillbased-ui
 
-RUN npm install && mkdir /skillbased-ui && mv ./node_modules ./skillbased-ui
+#COPY frontend/package.json frontend/package-lock.json ./skillbased-ui
+WORKDIR skillbased-ui
+COPY frontend/ .
 
-WORKDIR /skillbased-ui
+#RUN npm install && mkdir /skillbased-ui && mv ./node_modules ./skillbased-ui
+RUN npm install
+#COPY . ./skillbased-ui
 
-COPY . .
+#WORKDIR skillbased-ui
+
+#COPY . .
 
 # Build the project and copy the files
 RUN npm run build
@@ -17,7 +23,7 @@ FROM nginx:alpine
 
 #!/bin/sh
 
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 ## Remove default nginx index page
 RUN rm -rf /usr/share/nginx/html/*
