@@ -7,12 +7,13 @@ COPY . .
 # Get dependancies - will also be cached if we won't change mod/sum
 RUN go mod download
 
-RUN go build -o bin/api cmd/api
+WORKDIR cmd/api
 
-FROM scratch
-COPY --from=build-env /api /api
+RUN CGO_ENABLED=0 GOOS=linux go build -installsuffix cgo
+
+FROM alpine:latest
+COPY --from=build-env /api/cmd/api /
 ENTRYPOINT ["./api"]
-
 
 
 

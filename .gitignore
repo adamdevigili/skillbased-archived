@@ -8,6 +8,10 @@
 # Dependency directories
 node_modules/
 
+# Build/binary directories
+bin/
+build/
+
 # Logs
 npm-debug.log*
 yarn-debug.log*

@@ -15,7 +15,7 @@ services:
       PG_HOST: postgres
       PG_PORT: 5432
       PG_USER: user
-      PG_PASSWORD: ball
+      PG_PASSWORD: test
       PG_DATABASE: skillbased
 
   skillbased-nginx-react:
@@ -33,5 +33,5 @@ services:
       - 127.0.0.1:5432:5432
     environment:
       POSTGRES_USER: user
-      POSTGRES_PASSWORD: ball
+      POSTGRES_PASSWORD: test
       POSTGRES_DB: skillbased
