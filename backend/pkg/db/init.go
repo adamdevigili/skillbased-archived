@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/jinzhu/gorm"
 
@@ -54,6 +55,7 @@ func InitDB() *pgx.ConnPool {
 		if i == dbConnRetryLimit {
 			log.Panic("Maximum number of retries to establish database connection reached")
 		}
+		time.Sleep(time.Duration(1 * time.Minute))
 	}
 
 	log.Info(fmt.Sprintf(
