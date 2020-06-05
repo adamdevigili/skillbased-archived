@@ -13,18 +13,17 @@ import (
 )
 
 func InitRoutes(e *echo.Echo, dbConn *pgx.ConnPool) {
-	apiGroup := e.Group("/api")
+	h := &handlers.Handler{
+		DBConn: dbConn,
+	}
+	e.GET("/health", h.Health)
+
+	apiGroup := e.Group("/v1")
 
 	// Middleware
 	apiGroup.Use(middleware.RequestIDMiddleware())
 	apiGroup.Use(echomiddleware.Logger())
 	apiGroup.Use(echomiddleware.Recover())
-
-	h := &handlers.Handler{
-		DBConn: dbConn,
-	}
-
-	apiGroup.GET("/health", h.Health)
 
 	// Teams
 	apiGroup.POST("/teams", h.CreateTeam)
