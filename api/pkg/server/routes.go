@@ -16,9 +16,10 @@ func InitRoutes(e *echo.Echo, dbConn *pgx.ConnPool) {
 	h := &handlers.Handler{
 		DBConn: dbConn,
 	}
-	e.GET("/health", h.Health)
 
 	apiGroup := e.Group("/v1")
+
+	apiGroup.GET("/health", h.Health)
 
 	// Middleware
 	apiGroup.Use(middleware.RequestIDMiddleware())

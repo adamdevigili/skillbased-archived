@@ -11,6 +11,8 @@ services:
 
   skillbased-ui-nginx:
     container_name: skillbased-ui-nginx
-    build: './nginx'
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
     ports:
       - "80:80"
