@@ -21,3 +21,6 @@ yarn-error.log*
 
 # Images
 /images
+
+.env.local
+.env.prod

@@ -4,14 +4,14 @@
 
 [skillbased.io](http://skillbased.io) is a service that is aimed to provide players of casual, "pick-up" type sports to quickly and easily create balanced teams for their activity, and save those teams to create elevated levels of competition.
 
-Deploy locally with: `docker-compose -f deploy/compose/docker-compose.yml up --build`
+Deploy locally with: `docker-compose -f docker-compose.yml up --build`
 
 ## Tech
 ### Stack
-- Frontend: [NextJS](https://nextjs.org/)
+- Frontend: [ReactJS](https://reactjs.org/)
 - Backend: [Go](https://golang.org/) ([echo](https://echo.labstack.com/))
 - Database: [PostgreSQL](https://www.postgresql.org/)
-- Orchestration: [Kubernetes](https://kubernetes.io/)
+- Runtime: [Docker](https://www.docker.com/)
 - Infrastructure: [DigitalOcean](https://www.digitalocean.com/)
 
 

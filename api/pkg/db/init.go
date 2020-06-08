@@ -7,7 +7,7 @@ import (
 	"github.com/adamdevigili/skillbased.io/pkg/models"
 	"github.com/jackc/pgx"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	_ "github.com/joho/godotenv/autoload" // Import autoload package to setup env vars for dotenv
+	dotenv "github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/labstack/gommon/log"
 	_ "github.com/lib/pq"
@@ -24,11 +24,13 @@ type dbConfig struct {
 	User     string `required:"true"`
 	Database string `required:"true"`
 	Password string `required:"true"`
+	DevMode  bool   `required:"true"`
 }
 
 func InitDB() *pgx.ConnPool {
 	var dbConfig dbConfig
 
+	dotenv.Load("../.env")
 	err := envconfig.Process("pg", &dbConfig)
 	if err != nil {
 		log.Fatal(err.Error())
@@ -47,8 +49,13 @@ func InitDB() *pgx.ConnPool {
 		},
 	}
 
-	log.Infof("Attempting to connect to database '%s' at %s:%d as user '%s'",
-		dbConfig.Database, dbConfig.Host, dbConfig.Port, dbConfig.User,
+	// If we're using a development Postgres, discard TLS configuration
+	if dbConfig.DevMode {
+		pgxConfig.ConnConfig.TLSConfig = nil
+	}
+
+	log.Infof("Attempting to connect to database '%s' at %s:%d as user '%s'. DevMode=%t",
+		dbConfig.Database, dbConfig.Host, dbConfig.Port, dbConfig.User, dbConfig.DevMode,
 	)
 
 	var connPool *pgx.ConnPool
