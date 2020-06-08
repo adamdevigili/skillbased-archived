@@ -22,7 +22,7 @@ const (
 // CreateSportsTable creates the initial table to store sports. Should only be run once at start time
 func CreateSportsTable(conn *pgx.ConnPool) error {
 	if _, err := conn.Exec(
-		fmt.Sprintf(`CREATE TABLE %s(id VARCHAR(50) UNIQUE PRIMARY KEY, name VARCHAR(50));`, sportTableName),
+		fmt.Sprintf(`CREATE TABLE %s(id VARCHAR(50) PRIMARY KEY, name VARCHAR(50));`, sportTableName),
 	); err != nil {
 		if strings.Contains(err.Error(), duplicateTableError) {
 			log.Info("sports table already exists")

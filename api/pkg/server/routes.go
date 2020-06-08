@@ -25,6 +25,7 @@ func InitRoutes(e *echo.Echo, dbConn *pgx.ConnPool) {
 	apiGroup.Use(middleware.RequestIDMiddleware())
 	apiGroup.Use(echomiddleware.Logger())
 	apiGroup.Use(echomiddleware.Recover())
+	apiGroup.Use(echomiddleware.CORS())
 
 	// Teams
 	apiGroup.POST("/teams", h.CreateTeam)

@@ -6,12 +6,9 @@ import APIApp from './APIApp';
 import * as serviceWorker from './serviceWorker';
 
 let host = window.location.host
-console.log(host)
 const parsedData = host.split(".");
-console.log("hey")
-console.log(parsedData)
 
-if (parsedData[0] == "api") {
+if (parsedData[0] === "api") {
     const subDomain = parsedData[0];
     ReactDOM.render(
         <React.StrictMode>
