@@ -4,7 +4,6 @@ import { Button } from 'antd';
 const GoButton = () => {
     return (
         <Button
-            color="blue"
             size="large"
             type="primary"
         >

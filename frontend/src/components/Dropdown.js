@@ -14,13 +14,15 @@ function handleChange(value) {
 
 function SportsDropdown() {
 	const [isLoading, setIsLoading] = useState(false);
+	const apiURL = process.env.REACT_APP_SKILLBASED_API_URL + process.env.REACT_APP_SKILLBASED_API_VERSION
 
 	useEffect(() => {
 		const fetchData = async () => {
 			setIsLoading(true);
 
+
 			const result = await axios(
-				'http://localhost:8080/v1/sports',
+				apiURL + '/sports',
 			);
 
 			result.data.items.forEach((sport) => {
