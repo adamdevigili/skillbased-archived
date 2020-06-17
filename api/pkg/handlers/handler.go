@@ -1,9 +1,11 @@
 package handlers
 
-import "github.com/jackc/pgx"
+import (
+	"github.com/jinzhu/gorm"
+)
 
 type (
 	Handler struct {
-		DBConn *pgx.ConnPool
+		DB *gorm.DB
 	}
 )

@@ -1,18 +1,48 @@
 package models
 
 import (
+
+	//"github.com/jinzhu/gorm/dialects/sqlite"
+
+	"encoding/json"
+	"fmt"
+
+	"github.com/rs/xid"
+
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+
+	"github.com/jinzhu/gorm/dialects/postgres"
 )
 
 type SkillWeightMap map[string]float32
 
 type Sport struct {
-	gorm.Model
-	Name              string         `json:"name"`
-	ID                string         `json:"id"`
-	SkillWeights      SkillWeightMap `json:"skills"`
+	Base
+	SkillWeights      SkillWeightMap `gorm:"-" json:"skills"` // Ignore this field for DB
+	SkillWeightsDB    postgres.Jsonb `json:"-"`               // Ignore this field for JSON
 	MaxPlayersPerTeam int            `json:"max_players_per_team"`
+}
+
+// BeforeCreate is a GORM hook that is used to convert the Go map to a JSON struct to be stored in postgres
+func (s *Sport) BeforeCreate(scope *gorm.Scope) (err error) {
+	if x, err := json.Marshal(s.SkillWeights); err != nil {
+		return err
+	} else {
+		s.SkillWeightsDB = postgres.Jsonb{RawMessage: x}
+	}
+
+	return
+}
+
+// AfterFind is a GORM hook that is used to convert the JSON struct in postgres to the Go map to be returned to the user
+// and operated on by the balancer algorithm
+func (s *Sport) AfterFind() (err error) {
+	fmt.Println("AfterFind called on " + s.ID.String())
+	if err := json.Unmarshal(s.SkillWeightsDB.RawMessage, &s.SkillWeights); err != nil {
+		return err
+	}
+
+	return
 }
 
 type SportList struct {
@@ -22,8 +52,10 @@ type SportList struct {
 
 var (
 	ultimateFrisbee = Sport{
-		Name: "Ultimate Frisbee",
-		ID:   "bqrc556hds3g8muin1ag", //xid.New().String(),
+		Base: Base{
+			Name: "Ultimate Frisbee",
+			ID:   xid.New(),
+		},
 		SkillWeights: SkillWeightMap{
 			"handling": 0.9,
 			"speed":    0.8,
@@ -33,8 +65,10 @@ var (
 	}
 
 	football = Sport{
-		Name: "Football",
-		ID:   "bqrc7tmhds3g8muin1b0", //xid.New().String(),
+		Base: Base{
+			Name: "Football",
+			ID:   xid.New(),
+		},
 		SkillWeights: SkillWeightMap{
 			"strength": 0.7,
 			"speed":    0.8,
@@ -44,8 +78,10 @@ var (
 	}
 
 	basketball = Sport{
-		Name: "Basketball",
-		ID:   "bqrc7tmhds3g8muin1bg", //xid.New().String(),
+		Base: Base{
+			Name: "Basketball",
+			ID:   xid.New(),
+		},
 		SkillWeights: SkillWeightMap{
 			"shooting": 0.9,
 			"speed":    0.6,

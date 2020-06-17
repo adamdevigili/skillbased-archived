@@ -24,17 +24,17 @@ func GenerateTeams(req models.GenerateTeamRequest, sport models.Sport) models.Te
 	for _, player := range players {
 		if player.ID == "" {
 			player.PowerScores = map[string]float32{}
-			player.PowerScores[sport.ID] = calcPlayerPowerScoreForSport(player, sport)
+			player.PowerScores[sport.ID.String()] = calcPlayerPowerScoreForSport(player, sport)
 			player.ID = xid.New().String()
 			db.PlayersMem[player.ID] = &player
-			log.Info(fmt.Sprintf("%s player score: %f", player.Name, player.PowerScores[sport.ID]))
+			log.Info(fmt.Sprintf("%s player score: %f", player.Name, player.PowerScores[sport.ID.String()]))
 		} else {
 			player, ok := db.PlayersMem[player.ID]
 			if !ok {
 				log.Warn(fmt.Sprintf("provided ID %s not present", player.ID))
 			} else {
-				if _, ok := player.PowerScores[sport.ID]; !ok {
-					player.PowerScores[sport.ID] = calcPlayerPowerScoreForSport(*player, sport)
+				if _, ok := player.PowerScores[sport.ID.String()]; !ok {
+					player.PowerScores[sport.ID.String()] = calcPlayerPowerScoreForSport(*player, sport)
 				} else {
 					log.Warn(fmt.Sprintf("provided ID %s doesn't have stats for target sport", player.ID))
 				}
@@ -44,17 +44,17 @@ func GenerateTeams(req models.GenerateTeamRequest, sport models.Sport) models.Te
 
 	// Sort all players by power score (descending)
 	sort.Slice(req.Players, func(i, j int) bool {
-		return req.Players[i].PowerScores[sport.ID] > req.Players[j].PowerScores[sport.ID]
+		return req.Players[i].PowerScores[sport.ID.String()] > req.Players[j].PowerScores[sport.ID.String()]
 	})
 
 	// Iterate over sorted list, adding players to different teams
 	for i, player := range players {
 		if i == len(players)-1 {
 			teams[numberOfTeams-1].Players = append(teams[numberOfTeams-1].Players, player)
-			teams[numberOfTeams-1].PowerScore += player.PowerScores[sport.ID]
+			teams[numberOfTeams-1].PowerScore += player.PowerScores[sport.ID.String()]
 		} else {
 			teams[i%numberOfTeams].Players = append(teams[i%numberOfTeams].Players, player)
-			teams[i%numberOfTeams].PowerScore += player.PowerScores[sport.ID]
+			teams[i%numberOfTeams].PowerScore += player.PowerScores[sport.ID.String()]
 		}
 	}
 
@@ -79,7 +79,7 @@ func calcPlayerPowerScoreForSport(player models.Player, sport models.Sport) floa
 	var powerScore float32
 
 	for skill, weight := range sport.SkillWeights {
-		powerScore += float32(player.Skills[sport.ID][skill]) * weight
+		powerScore += float32(player.Skills[sport.ID.String()][skill]) * weight
 	}
 
 	return powerScore

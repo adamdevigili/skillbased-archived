@@ -16,13 +16,11 @@ type Error struct {
 	RequestID string `json:"request_id"`
 }
 
-func GenNotFoundError(resource, resourceID, requestID string) Errors {
-	return Errors{Errors: []Error{
-		{
-			Status:    http.StatusNotFound,
-			Title:     fmt.Sprintf("%s with ID '%s' not found", resource, resourceID),
-			Detail:    "please check the provided ID is correct and try again",
-			RequestID: requestID,
-		},
-	}}
+func GenNotFoundError(resource, resourceID, requestID string) Error {
+	return Error{
+		Status:    http.StatusNotFound,
+		Title:     fmt.Sprintf("%s with ID '%s' not found", resource, resourceID),
+		Detail:    "please check the provided ID is correct and try again",
+		RequestID: requestID,
+	}
 }

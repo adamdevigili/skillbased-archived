@@ -1,11 +1,12 @@
 package db
 
 import (
-	"crypto/tls"
+	"fmt"
 	"time"
 
 	"github.com/adamdevigili/skillbased.io/pkg/models"
-	"github.com/jackc/pgx"
+
+	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	dotenv "github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
@@ -27,7 +28,7 @@ type dbConfig struct {
 	DevMode  bool   `required:"true"`
 }
 
-func InitDB() *pgx.ConnPool {
+func InitDB() *gorm.DB {
 	var dbConfig dbConfig
 
 	dotenv.Load("../.env")
@@ -36,45 +37,40 @@ func InitDB() *pgx.ConnPool {
 		log.Fatal(err.Error())
 	}
 
-	pgxConfig := pgx.ConnPoolConfig{
-		ConnConfig: pgx.ConnConfig{
-			TLSConfig: &tls.Config{
-				InsecureSkipVerify: true,
-			},
-			Host:     dbConfig.Host,
-			Port:     dbConfig.Port,
-			User:     dbConfig.User,
-			Password: dbConfig.Password,
-			Database: dbConfig.Database,
-		},
-	}
+	connStr := fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s",
+		dbConfig.Host,
+		dbConfig.Port,
+		dbConfig.User,
+		dbConfig.Database,
+		dbConfig.Password,
+	)
 
-	// If we're using a development Postgres, discard TLS configuration
+	// If we're using a development Postgres, disable TLS
 	if dbConfig.DevMode {
-		pgxConfig.ConnConfig.TLSConfig = nil
+		connStr += " sslmode=disable"
 	}
 
 	log.Infof("Attempting to connect to database '%s' at %s:%d as user '%s'. DevMode=%t",
 		dbConfig.Database, dbConfig.Host, dbConfig.Port, dbConfig.User, dbConfig.DevMode,
 	)
 
-	var connPool *pgx.ConnPool
-	for i := 1; i <= dbConnRetryLimit; i++ {
-		connPool, err = pgx.NewConnPool(pgxConfig)
+	var db *gorm.DB
+	for tries := 1; tries <= dbConnRetryLimit; tries++ {
+		db, err = gorm.Open("postgres", connStr)
 		if err != nil {
-			log.Warnf("Unable to connect to database %v. Retries remaining: %d", err, dbConnRetryLimit-i)
+			log.Warnf("Unable to connect to database %v. Retries remaining: %d", err, dbConnRetryLimit-tries)
 		} else {
 			break
 		}
 
-		if i == dbConnRetryLimit {
+		if tries == dbConnRetryLimit {
 			log.Fatal("Maximum number of retries to establish database connection reached, exiting")
 		}
 
 		time.Sleep(15 * time.Second)
 	}
 
-	if connPool != nil {
+	if db != nil {
 		log.Infof("Successfully connected to database '%s' at %s:%d as user '%s'",
 			dbConfig.Database, dbConfig.Host, dbConfig.Port, dbConfig.User,
 		)
@@ -82,23 +78,23 @@ func InitDB() *pgx.ConnPool {
 		log.Fatal("Could not connect to database, exiting")
 	}
 
-	//db, err := gorm.Open(
-	//	"postgres",
-	//	fmt.Sprintf(
-	//		"host=%s port=%s user=%s dbname=%s password=%s",
-	//		dbConfig.Host, dbConfig.Port, dbConfig.User, dbConfig.Database, dbConfig.Password,
-	//	),
-	//)
-	//defer db.Close()
+	// Initialize the required tables
+	InitTables(db)
 
-	CreateSportsTable(connPool)
+	return db
+}
 
+func InitTables(db *gorm.DB) {
+	InitSportsTable(db)
+}
+
+func InitSportsTable(db *gorm.DB) {
 	log.Info("Populating sports database with initial values..")
+
+	db.AutoMigrate(&models.Sport{})
 	for _, s := range models.InitialSports {
-		if err := InsertSport(connPool, &s); err != nil {
+		if err := InsertSport(db, &s); err != nil {
 			log.Warn(err)
 		}
 	}
-
-	return connPool
 }
