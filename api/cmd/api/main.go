@@ -7,10 +7,11 @@ import (
 )
 
 func main() {
-	dbConn := db.InitDB()
-
+	// Create new Echo server
 	e := echo.New()
-	server.InitRoutes(e, dbConn)
+
+	// Initialize DB and routes
+	server.InitRoutes(e, db.InitDB())
 
 	// Start server
 	e.Logger.Fatal(e.Start(":8080"))

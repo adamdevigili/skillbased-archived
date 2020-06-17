@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	github.com/Pallinder/go-randomdata v1.2.0
+	github.com/badoux/checkmail v0.0.0-20181210160741-9661bd69e9ad
 	github.com/cockroachdb/apd v1.1.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/gofrs/uuid v3.3.0+incompatible // indirect
@@ -19,5 +20,5 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rs/xid v1.2.1
 	github.com/shopspring/decimal v1.2.0 // indirect
-	golang.org/x/crypto v0.0.0-20200429183012-4b2356b1ed79 // indirect
+	golang.org/x/crypto v0.0.0-20200429183012-4b2356b1ed79
 )

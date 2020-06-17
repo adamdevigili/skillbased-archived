@@ -3,18 +3,19 @@ package server
 import (
 	"fmt"
 
+	"github.com/jinzhu/gorm"
+
 	"github.com/adamdevigili/skillbased.io/pkg/constants"
 	"github.com/adamdevigili/skillbased.io/pkg/middleware"
-	"github.com/jackc/pgx"
 	"github.com/labstack/echo/v4"
 	echomiddleware "github.com/labstack/echo/v4/middleware"
 
 	"github.com/adamdevigili/skillbased.io/pkg/handlers"
 )
 
-func InitRoutes(e *echo.Echo, dbConn *pgx.ConnPool) {
+func InitRoutes(e *echo.Echo, db *gorm.DB) {
 	h := &handlers.Handler{
-		DBConn: dbConn,
+		DB: db,
 	}
 
 	apiGroup := e.Group("/v1")

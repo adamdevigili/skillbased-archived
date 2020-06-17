@@ -2,114 +2,38 @@ package db
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/adamdevigili/skillbased.io/pkg/models"
-	"github.com/jackc/pgx"
-	"github.com/labstack/gommon/log"
+	"github.com/jinzhu/gorm"
 )
 
-const (
-	sportTableName = "sports"
-)
+func InsertSport(db *gorm.DB, sport *models.Sport) error {
+	return db.Create(sport).Error
+}
 
-const (
-	duplicateKeyError   = "duplicate key value violates unique constraint"
-	duplicateTableError = "already exists"
-)
-
-/* Create/Insert */
-// CreateSportsTable creates the initial table to store sports. Should only be run once at start time
-func CreateSportsTable(conn *pgx.ConnPool) error {
-	if _, err := conn.Exec(
-		fmt.Sprintf(`CREATE TABLE %s(id VARCHAR(50) PRIMARY KEY, name VARCHAR(50));`, sportTableName),
-	); err != nil {
-		if strings.Contains(err.Error(), duplicateTableError) {
-			log.Info("sports table already exists")
-			return nil
-		} else {
-			return err
-		}
+func GetSport(db *gorm.DB, id string) (*models.Sport, error) {
+	sport := &models.Sport{}
+	if db.Where("id = ?", id).First(sport).RecordNotFound() {
+		return nil, fmt.Errorf("sport not found")
 	}
 
-	log.Info(fmt.Sprintf("successfully created the %s table", sportTableName))
-
-	return nil
+	return sport, nil
 }
 
-func InsertSport(conn *pgx.ConnPool, sport *models.Sport) error {
-	if _, err := conn.Exec(insertSportQuery(sport.ID, sport.Name)); err != nil {
-		return err
-	}
-
-	log.Info(fmt.Sprintf("succesfully stored sport '%s' in the database", sport.Name))
-
-	return nil
-}
-
-func insertSportQuery(id, name string) (string, string, string) {
-	return fmt.Sprintf(`INSERT INTO %s(id, name) VALUES ($1, $2)`, sportTableName), id, name
-}
-
-/* List/Get */
-
-func GetSport(conn *pgx.ConnPool, id string) (*models.Sport, error) {
-	row := conn.QueryRow(getSportQuery(id))
-
-	var name string
-
-	err := row.Scan(&id, &name)
-	if err != nil {
-		log.Error(fmt.Sprintf("sport with id '%s' does not exist in the database", id))
-		return nil, err
-	}
-
-	return &models.Sport{ID: id, Name: name}, nil
-}
-
-func getSportQuery(id string) (string, string) {
-	return fmt.Sprintf(`SELECT * FROM %s WHERE id=$1`, sportTableName), id
-}
-
-func ListSports(conn *pgx.ConnPool) (*models.SportList, error) {
-	rows, err := conn.Query(listSportQuery())
-	if err != nil {
-		return nil, err
-	}
-
+func ListSports(db *gorm.DB) (*models.SportList, error) {
 	sportList := &models.SportList{}
+	db.Order("name").Find(&sportList.Items)
 
-	var (
-		id   string
-		name string
-	)
-
-	for rows.Next() {
-		rows.Scan(&id, &name)
-
-		sportList.Items = append(sportList.Items, models.Sport{
-			ID:   id,
-			Name: name,
-		})
-
-		sportList.NumItems += 1
-	}
-
+	sportList.NumItems = len(sportList.Items)
 	return sportList, nil
-
 }
 
-func listSportQuery() string {
-	return fmt.Sprintf(`SELECT * FROM %s`, sportTableName)
-}
-
-/* Update */
-
-/* Delete */
-func DeleteSport(conn *pgx.ConnPool, id string) {
-	conn.QueryRow(deleteSportQuery(id))
-}
-
-func deleteSportQuery(id string) (string, string) {
-	return fmt.Sprintf(`DELETE FROM %s WHERE id=$1`, sportTableName), id
+func DeleteSport(db *gorm.DB, id string) error {
+	if db.Where("id = ?", id).First(&models.Sport{}).RecordNotFound() {
+		return fmt.Errorf("sport not found")
+	} else {
+		fmt.Println("ya")
+		db.Where("id = ?", id).Delete(&models.Sport{})
+		return nil
+	}
 }
