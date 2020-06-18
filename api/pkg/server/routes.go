@@ -13,6 +13,7 @@ import (
 	"github.com/adamdevigili/skillbased.io/pkg/handlers"
 )
 
+// InitRoutes sets up the API routes, handlers, and middleware
 func InitRoutes(e *echo.Echo, db *gorm.DB) {
 	h := &handlers.Handler{
 		DB: db,
@@ -40,6 +41,7 @@ func InitRoutes(e *echo.Echo, db *gorm.DB) {
 	apiGroup.GET("/sports", h.ListSports)
 	apiGroup.GET(fmt.Sprintf("/sports/:%s", constants.URIKeyID), h.GetSport)
 	apiGroup.DELETE(fmt.Sprintf("/sports/:%s", constants.URIKeyID), h.DeleteSport)
+	apiGroup.PATCH(fmt.Sprintf("/sports/:%s", constants.URIKeyID), h.UpdateSport)
 
 	// Players
 	apiGroup.GET(fmt.Sprintf("/players/:%s", constants.URIKeyID), h.GetPlayer)

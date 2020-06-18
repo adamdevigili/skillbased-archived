@@ -34,6 +34,16 @@ func (s *Sport) BeforeCreate(scope *gorm.Scope) (err error) {
 	return
 }
 
+//func (s *Sport) BeforeUpdate() (err error) {
+//	if x, err := json.Marshal(s.SkillWeights); err != nil {
+//		return err
+//	} else {
+//		s.SkillWeightsDB = postgres.Jsonb{RawMessage: x}
+//	}
+//
+//	return
+//}
+
 // AfterFind is a GORM hook that is used to convert the JSON struct in postgres to the Go map to be returned to the user
 // and operated on by the balancer algorithm
 func (s *Sport) AfterFind() (err error) {

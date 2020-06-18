@@ -10,33 +10,34 @@ import (
 	"github.com/adamdevigili/skillbased.io/pkg/models"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
-	"github.com/rs/xid"
 )
 
+// CreateTeam creates a team
 func (h *Handler) CreateTeam(c echo.Context) error {
 	t := &models.Team{}
 
-	if err := c.Bind(t); err != nil {
-		e := models.Errors{Errors: []models.Error{
-			{
-				Status:    http.StatusBadRequest,
-				Title:     "failed to bind JSON",
-				Detail:    "please check your JSON structure",
-				RequestID: c.Request().Header.Get(echo.HeaderXRequestID),
-			},
-		}}
-		log.Error("ded")
-		return c.JSON(http.StatusBadRequest, e)
-	}
-
-	xid := xid.New().String()
-	t.ID = xid
-
-	db.TeamsMem[xid] = t
+	//if err := c.Bind(t); err != nil {
+	//	e := models.Errors{Errors: []models.Error{
+	//		{
+	//			Status:    http.StatusBadRequest,
+	//			Title:     "failed to bind JSON",
+	//			Detail:    "please check your JSON structure",
+	//			RequestID: c.Request().Header.Get(echo.HeaderXRequestID),
+	//		},
+	//	}}
+	//	log.Error("ded")
+	//	return c.JSON(http.StatusBadRequest, e)
+	//}
+	//
+	//xid := xid.New().String()
+	//t.ID = xid
+	//
+	//db.TeamsMem[xid] = t
 
 	return c.JSON(http.StatusCreated, t)
 }
 
+// GetTeam retrieves an existing sport
 func (h *Handler) GetTeam(c echo.Context) error {
 	id := c.Param(constants.URIKeyID)
 	team, ok := db.TeamsMem[id]
@@ -47,6 +48,7 @@ func (h *Handler) GetTeam(c echo.Context) error {
 	return c.JSON(http.StatusOK, team)
 }
 
+// ListTeams list all existing teams
 func (h *Handler) ListTeams(c echo.Context) error {
 	teamList := make([]models.Team, len(db.SportsMem))
 	for _, t := range db.TeamsMem {
@@ -56,6 +58,7 @@ func (h *Handler) ListTeams(c echo.Context) error {
 	return c.JSON(http.StatusOK, teamList)
 }
 
+// GenerateTeams generates a TeamSet based on the provided players and target sport
 func (h *Handler) GenerateTeams(c echo.Context) error {
 	t := &models.GenerateTeamRequest{}
 
@@ -88,10 +91,12 @@ func (h *Handler) GenerateTeams(c echo.Context) error {
 	return c.JSON(http.StatusCreated, core.GenerateTeams(*t, *sport))
 }
 
+// UpdateTeam updates an existing team
 func (h *Handler) UpdateTeam(c echo.Context) error {
 	return nil
 }
 
+// DeleteTeam deletes an existing team
 func (h *Handler) DeleteTeam(c echo.Context) error {
 	id := c.Param("id")
 	if _, ok := db.TeamsMem[id]; !ok {

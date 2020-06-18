@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/adamdevigili/skillbased.io/pkg/models"
-
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	dotenv "github.com/joho/godotenv"
@@ -28,6 +27,7 @@ type dbConfig struct {
 	DevMode  bool   `required:"true"`
 }
 
+// InitDB connects to the Postgres database, and initializes it where required
 func InitDB() *gorm.DB {
 	var dbConfig dbConfig
 
@@ -79,16 +79,16 @@ func InitDB() *gorm.DB {
 	}
 
 	// Initialize the required tables
-	InitTables(db)
+	initTables(db)
 
 	return db
 }
 
-func InitTables(db *gorm.DB) {
-	InitSportsTable(db)
+func initTables(db *gorm.DB) {
+	//initSportsTable(db)
 }
 
-func InitSportsTable(db *gorm.DB) {
+func initSportsTable(db *gorm.DB) {
 	log.Info("Populating sports database with initial values..")
 
 	db.AutoMigrate(&models.Sport{})
