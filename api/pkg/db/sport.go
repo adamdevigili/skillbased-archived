@@ -28,6 +28,16 @@ func ListSports(db *gorm.DB) (*models.SportList, error) {
 	return sportList, nil
 }
 
+func UpdateSport(db *gorm.DB, sport *models.Sport) (*models.Sport, error) {
+	if err := db.Save(sport).Error; err != nil {
+		return nil, err
+	} else {
+		s := &models.Sport{}
+		db.Where("id = ?", sport.ID).First(sport)
+		return s, nil
+	}
+}
+
 func DeleteSport(db *gorm.DB, id string) error {
 	if db.Where("id = ?", id).First(&models.Sport{}).RecordNotFound() {
 		return fmt.Errorf("sport not found")
