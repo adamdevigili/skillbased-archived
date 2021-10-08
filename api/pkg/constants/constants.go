@@ -7,3 +7,9 @@ const (
 	// RequestIDKey
 	RequestIDKey = "requestIDKey"
 )
+
+
+// Logging Keys
+const (
+	
+)

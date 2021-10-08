@@ -37,7 +37,20 @@ function SportsDropdown() {
 	return (
 		<div>
 			{isLoading ? (
-				<Select placeholder="Loading" size="large" style={{ width: '100%', margin: 'auto' }} showSearch fluid search selection loading disabled/>
+				<Select
+					placeholder="Loading"
+					size="large"
+					style={{
+						width: '100%',
+						margin: 'auto'
+					}}
+					showSearch
+					fluid
+					search
+					selection
+					loading
+					disabled
+				/>
 			) : (
 				<Select
 					placeholder="Select Sport"
