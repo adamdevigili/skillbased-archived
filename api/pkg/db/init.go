@@ -24,7 +24,7 @@ type dbConfig struct {
 	User     string `required:"true"`
 	Database string `required:"true"`
 	Password string `required:"true"`
-	DevMode  bool   `required:"true"`
+	DevMode  bool   `required:"false" default:"false"`
 }
 
 // InitDB connects to the Postgres database, and initializes it where required

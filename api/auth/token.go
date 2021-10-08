@@ -76,7 +76,7 @@ func ExtractTokenID(r *http.Request) (uint32, error) {
 	return 0, nil
 }
 
-//Pretty display the claims licely in the terminal
+//Pretty display the claims nicely in the terminal
 func Pretty(data interface{}) {
 	b, err := json.MarshalIndent(data, "", " ")
 	if err != nil {
