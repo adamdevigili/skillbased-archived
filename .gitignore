@@ -13,6 +13,7 @@ node_modules/
 # Build/binary directories
 bin/
 build/
+*.exe
 
 # Logs
 npm-debug.log*

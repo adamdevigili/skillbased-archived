@@ -1,0 +1,94 @@
+{
+  "sport_id": "ultimate-id",
+  "number_of_teams": 2,
+  "players": [
+    {
+      "name": "Adam",
+      "skills": {
+      	"ultimate-id": {
+    			"speed": 10,
+    			"handling": 8,
+          "height": 8,
+          "stamina": 8
+      	}
+      }
+    },
+    {
+      "name": "Carl",
+      "skills": {
+      	"ultimate-id": {
+    			"speed": 7,
+    			"handling": 10,
+          "height": 10,
+          "stamina": 7
+      	}
+      }
+    },
+    {
+      "name": "Siva",
+      "skills": {
+      	"ultimate-id": {
+    			"speed": 6,
+    			"handling": 5,
+          "height": 7,
+          "stamina": 6
+      	}
+      }
+    },
+    {
+      "name": "Kyle",
+      "skills": {
+      	"ultimate-id": {
+    			"speed": 6,
+    			"handling": 4,
+          "height": 6,
+          "stamina": 4
+      	}
+      }
+    },
+    {
+      "name": "Terry",
+      "skills": {
+        "ultimate-id": {
+          "speed": 5,
+          "handling": 5,
+          "height": 7,
+          "stamina": 4
+        }
+      }
+    },
+    {
+      "name": "Andrei",
+      "skills": {
+        "ultimate-id": {
+          "speed": 6,
+          "handling": 5,
+          "height": 7,
+          "stamina": 4
+        }
+      }
+    },
+    {
+      "name": "Drew",
+      "skills": {
+        "ultimate-id": {
+          "speed": 7,
+          "handling": 5,
+          "height": 8,
+          "stamina": 6
+        }
+      }
+    },
+    {
+      "name": "Ryan",
+      "skills": {
+        "ultimate-id": {
+          "speed": 5,
+          "handling": 7,
+          "height": 8,
+          "stamina": 6
+        }
+      }
+    }
+  ]
+}
