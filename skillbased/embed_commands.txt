@@ -1,0 +1,5 @@
+// go:embed frontend/dist
+// go:embed frontend/dist/_next
+// go:embed frontend/dist/*
+// go:embed frontend/dist/_next/static/*/*.js
+// go:embed frontend/dist/_next/static/chunks/pages/*
