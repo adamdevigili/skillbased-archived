@@ -4,13 +4,13 @@ module.exports = {
     // to the Go server.
     return [
       {
-        source: "/v1/health",
-        destination: "http://localhost:8080/v1/health",
+        source: "/:v1*",
+        destination: "http://localhost:8080/:v1*",
       },
     ];
   },
   future: {
     webpack5: true,
   },
-  trailingSlash: true,
+  // trailingSlash: true,
 };

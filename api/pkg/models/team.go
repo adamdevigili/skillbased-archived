@@ -32,6 +32,8 @@ type TeamSet struct {
 type GenerateTeamRequest struct {
 	Name          string   `json:"name"`
 	SportID       string   `json:"sport_id"`
+
+	
 	Players       []Player `json:"players"`
 	NumberOfTeams int      `json:"number_of_teams"`
 }

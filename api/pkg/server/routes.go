@@ -38,7 +38,7 @@ func InitRoutes(e *echo.Echo, db *gorm.DB, static *http.Handler) {
 	apiGroup.GET(fmt.Sprintf("/teams/:%s", constants.URIKeyID), h.GetTeam)
 	apiGroup.DELETE(fmt.Sprintf("/teams/:%s", constants.URIKeyID), h.DeleteTeam)
 
-	apiGroup.POST("/teams/generate", h.GenerateTeams)
+	apiGroup.PUT("/teams/generate", h.GenerateTeams)
 
 	// Sports
 	apiGroup.POST("/sports", h.CreateSport)

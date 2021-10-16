@@ -1,9 +1,9 @@
 import Link from "next/link";
 
-function Bar(): JSX.Element {
+export default function Spec(): JSX.Element {
   return (
     <div>
-      <h1>Bar</h1>
+      <h1>API Spec</h1>
       <p>
         This is <code>pages/foo/bar.tsx</code>.
       </p>
@@ -13,5 +13,3 @@ function Bar(): JSX.Element {
     </div>
   );
 }
-
-export default Bar;
