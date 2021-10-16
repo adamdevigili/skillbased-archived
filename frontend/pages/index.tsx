@@ -7,16 +7,14 @@ async function fetcher(url: string) {
 }
 
 function Index(): JSX.Element {
-  const { data, error } = useSWR("/v1/health", fetcher, { refreshInterval: 1000 });
+  const { data, error } = useSWR("/v1/health", fetcher);
 
   return (
     <div>
-      <h1>Hello, world! This didn't work</h1>
+      <h1>Skillbased</h1>
+
       <p>
-        This is <code>pages/index.tsx</code>.
-      </p>
-      <p>
-        Check out <Link href="/foo">foo</Link>.
+        Check out our <Link href="/api">API</Link>.
       </p>
 
       <h2>Memory allocation stats from Go server</h2>
