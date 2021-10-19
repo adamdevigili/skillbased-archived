@@ -13,7 +13,7 @@ type Errors struct {
 // Error contains the details of a specific error
 type Error struct {
 	Status    int    `json:"status"`
-	Title     string `json:"title"`
+	Message   string `json:"message"`
 	Detail    string `json:"detail"`
 	RequestID string `json:"request_id"`
 }
@@ -22,7 +22,7 @@ type Error struct {
 func GenNotFoundError(resource, resourceID, requestID string) Error {
 	return Error{
 		Status:    http.StatusNotFound,
-		Title:     fmt.Sprintf("%s with ID '%s' not found", resource, resourceID),
+		Message:   fmt.Sprintf("%s with ID '%s' not found", resource, resourceID),
 		Detail:    "please check the provided ID is correct and try again",
 		RequestID: requestID,
 	}

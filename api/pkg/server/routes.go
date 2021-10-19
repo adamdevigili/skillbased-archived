@@ -8,7 +8,7 @@ import (
 	"github.com/adamdevigili/skillbased/api/pkg/handlers"
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo/v4"
-	echomiddleware "github.com/labstack/echo/v4/middleware"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 // InitRoutes sets up the API routes, handlers, and middleware
@@ -17,9 +17,10 @@ func InitRoutes(e *echo.Echo, db *gorm.DB, static *http.Handler) {
 		DB: db,
 	}
 
-	e.Use(echomiddleware.Logger())
-	e.Use(echomiddleware.Recover())
-	e.Use(echomiddleware.CORS())
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+	e.Use(middleware.CORS())
+	e.Use(middleware.RequestID())
 
 	e.GET("/*", echo.WrapHandler(*static))
 
@@ -28,7 +29,6 @@ func InitRoutes(e *echo.Echo, db *gorm.DB, static *http.Handler) {
 	apiGroup.GET("/health", h.Health)
 
 	// Middleware
-	// apiGroup.Use(hlog.RequestIDHandler()))
 	// apiGroup.Use(echomiddleware.Logger())
 	// apiGroup.Use(echomiddleware.Recover())
 	// apiGroup.Use(echomiddleware.CORS())

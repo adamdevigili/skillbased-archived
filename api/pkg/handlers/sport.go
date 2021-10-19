@@ -20,7 +20,7 @@ func (h *Handler) CreateSport(c echo.Context) error {
 		e := models.Errors{Errors: []models.Error{
 			{
 				Status:    http.StatusBadRequest,
-				Title:     "failed to bind JSON",
+				Message:   "failed to bind JSON",
 				Detail:    "please check your JSON structure",
 				RequestID: c.Response().Header().Get(echo.HeaderXRequestID),
 			},
@@ -34,7 +34,7 @@ func (h *Handler) CreateSport(c echo.Context) error {
 		e := models.Errors{Errors: []models.Error{
 			{
 				Status:    http.StatusInternalServerError,
-				Title:     "internal server error",
+				Message:   "internal server error",
 				Detail:    "error when storing sport in database",
 				RequestID: c.Response().Header().Get(echo.HeaderXRequestID),
 			},
@@ -50,6 +50,7 @@ func (h *Handler) CreateSport(c echo.Context) error {
 // GetSport retrieves an existing sport
 func (h *Handler) GetSport(c echo.Context) error {
 	id := c.Param(constants.URIKeyID)
+	log.Infof("Fetching sport: %s", id)
 
 	sport, err := db.GetSport(h.DB, id)
 	if err != nil {
@@ -59,12 +60,12 @@ func (h *Handler) GetSport(c echo.Context) error {
 		e := models.Errors{Errors: []models.Error{}}
 
 		if strings.Contains(err.Error(), "not found") {
-			e.Errors = append(e.Errors, models.GenNotFoundError("sport", id, c.Get(constants.RequestIDKey).(string)))
+			e.Errors = append(e.Errors, models.GenNotFoundError("sport", id, getRequestID(c)))
 			code = http.StatusNotFound
 		} else {
 			e.Errors = append(e.Errors, models.Error{
 				Status:    http.StatusInternalServerError,
-				Title:     "internal server error",
+				Message:   "internal server error",
 				Detail:    "error when fetching sport from database",
 				RequestID: c.Response().Header().Get(echo.HeaderXRequestID),
 			})
@@ -83,7 +84,7 @@ func (h *Handler) ListSports(c echo.Context) error {
 		e := models.Errors{Errors: []models.Error{
 			{
 				Status:    http.StatusInternalServerError,
-				Title:     "internal server error",
+				Message:   "internal server error",
 				Detail:    "error when storing sport in database",
 				RequestID: c.Response().Header().Get(echo.HeaderXRequestID),
 			},
@@ -103,7 +104,7 @@ func (h *Handler) UpdateSport(c echo.Context) error {
 		e := models.Errors{Errors: []models.Error{
 			{
 				Status:    http.StatusBadRequest,
-				Title:     "failed to bind JSON",
+				Message:   "failed to bind JSON",
 				Detail:    "please check your JSON structure",
 				RequestID: c.Response().Header().Get(echo.HeaderXRequestID),
 			},
@@ -128,7 +129,7 @@ func (h *Handler) UpdateSport(c echo.Context) error {
 		} else {
 			e.Errors = append(e.Errors, models.Error{
 				Status:    http.StatusInternalServerError,
-				Title:     "internal server error",
+				Message:   "internal server error",
 				Detail:    "error when fetching sport from database",
 				RequestID: c.Response().Header().Get(echo.HeaderXRequestID),
 			})
@@ -155,7 +156,7 @@ func (h *Handler) DeleteSport(c echo.Context) error {
 		e := models.Errors{Errors: []models.Error{
 			{
 				Status:    http.StatusInternalServerError,
-				Title:     "internal server error",
+				Message:   "internal server error",
 				Detail:    "error when deleting sport from database",
 				RequestID: c.Response().Header().Get(echo.HeaderXRequestID),
 			},
