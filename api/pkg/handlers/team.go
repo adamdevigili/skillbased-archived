@@ -66,7 +66,7 @@ func (h *Handler) GenerateTeams(c echo.Context) error {
 		e := models.Errors{Errors: []models.Error{
 			{
 				Status:    http.StatusBadRequest,
-				Title:     "failed to bind JSON",
+				Message:     "failed to bind JSON",
 				Detail:    "please check your JSON structure",
 				RequestID: c.Request().Header.Get(echo.HeaderXRequestID),
 			},
@@ -80,7 +80,7 @@ func (h *Handler) GenerateTeams(c echo.Context) error {
 		e := models.Errors{Errors: []models.Error{
 			{
 				Status:    http.StatusBadRequest,
-				Title:     fmt.Sprintf("sport with id %s not found", t.SportID),
+				Message:     fmt.Sprintf("sport with id %s not found", t.SportID),
 				Detail:    "please check the provided ID is correct and try again",
 				RequestID: c.Request().Header.Get(echo.HeaderXRequestID),
 			},

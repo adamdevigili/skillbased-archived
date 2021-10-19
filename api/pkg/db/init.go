@@ -2,7 +2,6 @@ package db
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/adamdevigili/skillbased/api/pkg/models"
 	"github.com/jinzhu/gorm"
@@ -15,6 +14,7 @@ import (
 
 const (
 	dbConnRetryLimit = 5
+	defaultDatabase  = "postgres"
 )
 
 // Environment variables to configure target DB. All are required. Will be looked for with the "PG_" prefix
@@ -29,47 +29,55 @@ type dbConfig struct {
 
 // InitDB connects to the Postgres database, and initializes it where required
 func InitDB() *gorm.DB {
-	return nil
+	// return nil
 
 	var dbConfig dbConfig
 
-	dotenv.Load("../.env")
+	dotenv.Load(".env")
+
+	// for _, e := range os.Environ() {
+	// 	pair := strings.SplitN(e, "=", 2)
+	// 	fmt.Println(pair[0])
+	// }
+
 	err := envconfig.Process("pg", &dbConfig)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	connStr := fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s",
+	baseConnStr := fmt.Sprintf("host=%s port=%d user=%s password=%s",
 		dbConfig.Host,
 		dbConfig.Port,
 		dbConfig.User,
-		dbConfig.Database,
 		dbConfig.Password,
 	)
 
 	// If we're using a development Postgres, disable TLS
 	if dbConfig.DevMode {
-		connStr += " sslmode=disable"
+		baseConnStr += " sslmode=disable"
 	}
 
-	log.Infof("Attempting to connect to database '%s' at %s:%d as user '%s'. DevMode=%t",
-		dbConfig.Database, dbConfig.Host, dbConfig.Port, dbConfig.User, dbConfig.DevMode,
-	)
+	connStr := fmt.Sprintf("dbname=%s ", dbConfig.Database) + baseConnStr
+
+	defaultConnStr := fmt.Sprintf("dbname=%s ", defaultDatabase) + baseConnStr
 
 	var db *gorm.DB
-	for tries := 1; tries <= dbConnRetryLimit; tries++ {
-		db, err = gorm.Open("postgres", connStr)
-		if err != nil {
-			log.Warnf("Unable to connect to database %v. Retries remaining: %d", err, dbConnRetryLimit-tries)
-		} else {
-			break
-		}
 
-		if tries == dbConnRetryLimit {
-			log.Fatal("Maximum number of retries to establish database connection reached, exiting")
-		}
+	// Connect to the default "postgres" database first
+	log.Infof("Attempting initial connection to database", defaultConnStr)
+	db, err = gorm.Open("postgres", defaultConnStr)
+	if err != nil {
+		log.Fatalf("Unable to connect to database with default settings: %v", err)
+	}
 
-		time.Sleep(15 * time.Second)
+	// Create the skillbased database. If the database already exists, this command won't have any effect
+	log.Infof("Attempting to create main database", dbConfig.Database)
+	db.Exec(fmt.Sprintf("CREATE DATABASE %s;", dbConfig.Database))
+
+	// Connect to the "skillbased" database
+	db, err = gorm.Open("postgres", connStr)
+	if err != nil {
+		log.Fatalf("Unable to connect to main database: %v", err)
 	}
 
 	if db != nil {
@@ -87,7 +95,7 @@ func InitDB() *gorm.DB {
 }
 
 func initTables(db *gorm.DB) {
-	//initSportsTable(db)
+	initSportsTable(db)
 }
 
 func initSportsTable(db *gorm.DB) {

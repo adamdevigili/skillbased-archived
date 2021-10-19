@@ -2,13 +2,17 @@ package main
 
 import (
 	"embed"
+	"flag"
+	"fmt"
 	"io/fs"
-	"log"
 	"net/http"
 
 	"github.com/adamdevigili/skillbased/api/pkg/db"
+	_ "github.com/adamdevigili/skillbased/api/pkg/db"
 	"github.com/adamdevigili/skillbased/api/pkg/server"
+	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/gommon/log"
 )
 
 //go:embed frontend/dist
@@ -48,9 +52,20 @@ func main() {
 	// Create new Echo server
 	e := echo.New()
 
+	noDB := flag.Bool("no-db", false, "run this server without connecting to a database")
+	port := flag.String("port", "8080", "port to serve on")
+	flag.Parse()
+
+	var pg *gorm.DB
+	if !*noDB {
+		pg = db.InitDB()
+	} else {
+		log.Infof("starting without database connection")
+	}
+
 	// Initialize DB and routes
-	server.InitRoutes(e, db.InitDB(), &staticFS)
+	server.InitRoutes(e, pg, &staticFS)
 
 	// Start server
-	e.Logger.Fatal(e.Start(":8080"))
+	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", *port)))
 }

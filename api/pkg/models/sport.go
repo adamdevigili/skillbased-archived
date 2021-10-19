@@ -1,17 +1,12 @@
 package models
 
 import (
-
-	//"github.com/jinzhu/gorm/dialects/sqlite"
-
 	"encoding/json"
 	"fmt"
 
-	"github.com/rs/xid"
-
 	"github.com/jinzhu/gorm"
-
 	"github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/rs/xid"
 )
 
 type SkillWeightMap map[string]float32
