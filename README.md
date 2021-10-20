@@ -15,5 +15,4 @@ Deploy locally with: `docker-compose -f docker-compose.yml up --build`
 
 
 ### Other tools
-- CI/CD: [buddy.works](https://buddy.works/)
 - API designer: [insomnia.rest](https://insomnia.rest/)
