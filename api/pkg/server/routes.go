@@ -16,14 +16,14 @@ func InitRoutes(e *echo.Echo, db *gorm.DB) {
 		DB: db,
 	}
 
-	api := e.Group("/api")
+	// api := e.Group("/api")
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORS())
 	e.Use(middleware.RequestID())
 
-	v1 := api.Group("/v1")
+	v1 := e.Group("/v1")
 
 	v1.GET("/health", h.Health)
 
