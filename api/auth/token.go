@@ -13,13 +13,13 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-func CreateToken(user_id uint32) (string, error) {
+func CreateToken(userID uint32, signingKey string) (string, error) {
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
-	claims["user_id"] = user_id
+	claims["user_id"] = userID
 	claims["exp"] = time.Now().Add(time.Hour * 1).Unix() //Token expires after 1 hour
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(os.Getenv("API_SECRET")))
+	return token.SignedString(signingKey)
 
 }
 
@@ -76,7 +76,7 @@ func ExtractTokenID(r *http.Request) (uint32, error) {
 	return 0, nil
 }
 
-//Pretty display the claims nicely in the terminal
+// Pretty display the claims nicely in the terminal
 func Pretty(data interface{}) {
 	b, err := json.MarshalIndent(data, "", " ")
 	if err != nil {
