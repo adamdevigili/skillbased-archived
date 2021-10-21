@@ -3,11 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"next dev\" \"node api-server\"",
-    "dev:api": "nodemon api-server",
+    "dev": "concurrently \"next dev\"",
     "build": "next build",
-    "start": "concurrently \"next start\" \"node api-server\"",
-    "start:api": "node api-server",
+    "start": "concurrently \"next start\"",
     "test": "jest tests --coverage --maxWorkers=10",
     "test:watch": "jest --coverage --watch",
     "test:integration": "start-server-and-test start http-get://localhost:3000 cypress:run",
