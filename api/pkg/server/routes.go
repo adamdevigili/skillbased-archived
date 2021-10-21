@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+
 	"github.com/adamdevigili/skillbased/api/pkg/constants"
 	"github.com/adamdevigili/skillbased/api/pkg/handlers"
 	"github.com/jinzhu/gorm"
@@ -15,34 +16,31 @@ func InitRoutes(e *echo.Echo, db *gorm.DB) {
 		DB: db,
 	}
 
+	api := e.Group("/api")
+
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORS())
 	e.Use(middleware.RequestID())
 
-	apiGroup := e.Group("/v1")
+	v1 := api.Group("/v1")
 
-	apiGroup.GET("/health", h.Health)
-
-	// Middleware
-	// apiGroup.Use(echomiddleware.Logger())
-	// apiGroup.Use(echomiddleware.Recover())
-	// apiGroup.Use(echomiddleware.CORS())
+	v1.GET("/health", h.Health)
 
 	// Teams
-	apiGroup.POST("/teams", h.CreateTeam)
-	apiGroup.GET(fmt.Sprintf("/teams/:%s", constants.URIKeyID), h.GetTeam)
-	apiGroup.DELETE(fmt.Sprintf("/teams/:%s", constants.URIKeyID), h.DeleteTeam)
+	v1.POST("/teams", h.CreateTeam)
+	v1.GET(fmt.Sprintf("/teams/:%s", constants.URIKeyID), h.GetTeam)
+	v1.DELETE(fmt.Sprintf("/teams/:%s", constants.URIKeyID), h.DeleteTeam)
 
-	apiGroup.PUT("/teams/generate", h.GenerateTeams)
+	v1.PUT("/teams/generate", h.GenerateTeams)
 
 	// Sports
-	apiGroup.POST("/sports", h.CreateSport)
-	apiGroup.GET("/sports", h.ListSports)
-	apiGroup.GET(fmt.Sprintf("/sports/:%s", constants.URIKeyID), h.GetSport)
-	apiGroup.DELETE(fmt.Sprintf("/sports/:%s", constants.URIKeyID), h.DeleteSport)
-	apiGroup.PATCH(fmt.Sprintf("/sports/:%s", constants.URIKeyID), h.UpdateSport)
+	v1.POST("/sports", h.CreateSport)
+	v1.GET("/sports", h.ListSports)
+	v1.GET(fmt.Sprintf("/sports/:%s", constants.URIKeyID), h.GetSport)
+	v1.DELETE(fmt.Sprintf("/sports/:%s", constants.URIKeyID), h.DeleteSport)
+	v1.PATCH(fmt.Sprintf("/sports/:%s", constants.URIKeyID), h.UpdateSport)
 
 	// Players
-	apiGroup.GET(fmt.Sprintf("/players/:%s", constants.URIKeyID), h.GetPlayer)
+	v1.GET(fmt.Sprintf("/players/:%s", constants.URIKeyID), h.GetPlayer)
 }
