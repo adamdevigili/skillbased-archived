@@ -29,11 +29,15 @@ type TeamSet struct {
 	Teams     []Team    `json:"teams"`
 }
 
-type GenerateTeamRequest struct {
-	Name          string   `json:"name"`
-	SportID       string   `json:"sport_id"`
+type TeamList struct {
+	NumItems int    `json:"num_items"`
+	Items    []Team `json:"items"`
+}
 
-	
+type GenerateTeamRequest struct {
+	Name    string `json:"name"`
+	SportID string `json:"sport_id"`
+
 	Players       []Player `json:"players"`
 	NumberOfTeams int      `json:"number_of_teams"`
 }

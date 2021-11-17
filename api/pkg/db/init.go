@@ -28,22 +28,6 @@ type Config struct {
 
 // InitDB connects to the Postgres database, and initializes it where required
 func InitDB(dbConfig Config) *gorm.DB {
-	// return nil
-
-	// var dbConfig dbConfig
-
-	// dotenv.Load(".env")
-
-	// for _, e := range os.Environ() {
-	// 	pair := strings.SplitN(e, "=", 2)
-	// 	fmt.Println(pair[0])
-	// }
-
-	// err := envconfig.Process("pg", &dbConfig)
-	// if err != nil {
-	// 	log.Fatal(err.Error())
-	// }
-
 	if dbConfig.Disabled {
 		return nil
 	}
@@ -54,6 +38,8 @@ func InitDB(dbConfig Config) *gorm.DB {
 		dbConfig.User,
 		dbConfig.Password,
 	)
+
+	log.Info(dbConfig)
 
 	// If we're using a development Postgres, disable TLS
 	if dbConfig.DevMode {
@@ -99,6 +85,18 @@ func InitDB(dbConfig Config) *gorm.DB {
 
 func initTables(db *gorm.DB) {
 	initSportsTable(db)
+	initPlayersTable(db)
+}
+
+func initPlayersTable(db *gorm.DB) {
+	log.Info("Populating players database with initial values..")
+
+	db.AutoMigrate(&models.Player{})
+	for _, p := range models.GenerateSeedPlayers() {
+		if err := InsertPlayer(db, &p); err != nil {
+			log.Warn(err)
+		}
+	}
 }
 
 func initSportsTable(db *gorm.DB) {

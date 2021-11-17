@@ -14,6 +14,14 @@ type Base struct {
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 }
 
+var skillsList = []string{
+	"handling",
+	"power",
+	"speed",
+	"height",
+	"stamina",
+}
+
 //// BeforeCreate will set a UUID rather than numeric ID.
 //func (base *Base) BeforeCreate(scope *gorm.Scope) error {
 //	return scope.SetColumn("ID", xid.New())
