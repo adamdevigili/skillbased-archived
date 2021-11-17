@@ -93,7 +93,7 @@ func initPlayersTable(db *gorm.DB) {
 	log.Info("Populating players database with initial values..")
 
 	db.AutoMigrate(&models.Player{})
-	for _, p := range models.GenerateSeedPlayers() {
+	for _, p := range generateSeedPlayers() {
 		if err := InsertPlayer(db, p); err != nil {
 			log.Warn(err)
 		}
@@ -104,7 +104,7 @@ func initSportsTable(db *gorm.DB) {
 	log.Info("Populating sports database with initial values..")
 
 	db.AutoMigrate(&models.Sport{})
-	for _, s := range models.InitialSports {
+	for _, s := range initialSports {
 		if err := InsertSport(db, &s); err != nil {
 			log.Warn(err)
 		}

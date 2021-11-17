@@ -1,19 +1,20 @@
-package models
+package db
 
 import (
 	"fmt"
 
+	"github.com/adamdevigili/skillbased/api/pkg/models"
 	"github.com/pioz/faker"
 	"github.com/rs/xid"
 )
 
 var (
-	ultimateFrisbee = Sport{
-		Base: Base{
+	ultimateFrisbee = models.Sport{
+		Base: models.Base{
 			Name: "Ultimate Frisbee",
 			ID:   xid.New(),
 		},
-		SkillWeights: SkillWeightMap{
+		SkillWeights: models.SkillWeightMap{
 			"handling": 0.9,
 			"speed":    0.8,
 			"stamina":  0.8,
@@ -21,12 +22,12 @@ var (
 		},
 	}
 
-	football = Sport{
-		Base: Base{
+	football = models.Sport{
+		Base: models.Base{
 			Name: "Football",
 			ID:   xid.New(),
 		},
-		SkillWeights: SkillWeightMap{
+		SkillWeights: models.SkillWeightMap{
 			"strength": 0.7,
 			"speed":    0.8,
 			"stamina":  0.8,
@@ -34,12 +35,12 @@ var (
 		},
 	}
 
-	basketball = Sport{
-		Base: Base{
+	basketball = models.Sport{
+		Base: models.Base{
 			Name: "Basketball",
 			ID:   xid.New(),
 		},
-		SkillWeights: SkillWeightMap{
+		SkillWeights: models.SkillWeightMap{
 			"shooting": 0.9,
 			"speed":    0.6,
 			"stamina":  0.8,
@@ -48,7 +49,7 @@ var (
 		},
 	}
 
-	InitialSports = []Sport{
+	initialSports = []models.Sport{
 		ultimateFrisbee,
 		basketball,
 		football,
@@ -57,16 +58,16 @@ var (
 
 var playersToGenerate = 30
 
-func GenerateSeedPlayers() []*Player {
+func generateSeedPlayers() []*models.Player {
 	faker.SetSeed(623)
-	players := make([]*Player, playersToGenerate)
+	players := make([]*models.Player, playersToGenerate)
 
 	for i := range players {
 		fn, ln := faker.FirstName(), faker.LastName()
-		p := &Player{
+		p := &models.Player{
 			FirstName: fn,
 			LastName:  ln,
-			Base: Base{
+			Base: models.Base{
 				Name: fmt.Sprintf("%s %s", fn, ln),
 				ID:   xid.New(),
 			},
@@ -74,7 +75,7 @@ func GenerateSeedPlayers() []*Player {
 			IsSeed:      true,
 		}
 
-		for _, s := range skillsList {
+		for _, s := range models.SkillsList {
 			p.PowerScores[s] = faker.IntInRange(1, 10)
 		}
 
