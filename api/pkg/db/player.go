@@ -5,6 +5,7 @@ import (
 
 	"github.com/adamdevigili/skillbased/api/pkg/models"
 	"github.com/jinzhu/gorm"
+	"github.com/labstack/gommon/log"
 )
 
 func InsertPlayer(db *gorm.DB, player *models.Player) error {
@@ -46,4 +47,9 @@ func DeletePlayer(db *gorm.DB, id string) error {
 		db.Where("id = ?", id).Delete(&models.Player{})
 		return nil
 	}
+}
+
+func deleteAllSeedPlayers(db *gorm.DB) {
+	log.Info("deleteing all seed players from existing DB")
+	db.Where("is_seed = ?", "t").Delete(&models.Player{})
 }
