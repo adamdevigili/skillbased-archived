@@ -6,7 +6,6 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/jinzhu/gorm/dialects/postgres"
-	"github.com/rs/xid"
 )
 
 type SkillWeightMap map[string]float32
@@ -53,52 +52,4 @@ func (s *Sport) AfterFind() (err error) {
 type SportList struct {
 	NumItems int     `json:"num_items"`
 	Items    []Sport `json:"items"`
-}
-
-var (
-	ultimateFrisbee = Sport{
-		Base: Base{
-			Name: "Ultimate Frisbee",
-			ID:   xid.New(),
-		},
-		SkillWeights: SkillWeightMap{
-			"handling": 0.9,
-			"speed":    0.8,
-			"stamina":  0.8,
-			"height":   0.4,
-		},
-	}
-
-	football = Sport{
-		Base: Base{
-			Name: "Football",
-			ID:   xid.New(),
-		},
-		SkillWeights: SkillWeightMap{
-			"strength": 0.7,
-			"speed":    0.8,
-			"stamina":  0.8,
-			"agility":  0.5,
-		},
-	}
-
-	basketball = Sport{
-		Base: Base{
-			Name: "Basketball",
-			ID:   xid.New(),
-		},
-		SkillWeights: SkillWeightMap{
-			"shooting": 0.9,
-			"speed":    0.6,
-			"stamina":  0.8,
-			"height":   0.8,
-			"passing":  0.5,
-		},
-	}
-)
-
-var InitialSports = []Sport{
-	ultimateFrisbee,
-	basketball,
-	football,
 }
