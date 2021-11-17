@@ -1,6 +1,8 @@
 package models
 
 import (
+	"fmt"
+
 	"github.com/pioz/faker"
 	"github.com/rs/xid"
 )
@@ -55,19 +57,28 @@ var (
 
 var playersToGenerate = 30
 
-func GenerateSeedPlayers() []Player {
+func GenerateSeedPlayers() []*Player {
 	faker.SetSeed(623)
-	players := make([]Player, playersToGenerate)
+	players := make([]*Player, playersToGenerate)
 
-	for _, p := range players {
-		p.ID = xid.New().String()
-		p.FirstName = faker.FirstName()
-		p.LastName = faker.LastName()
+	for i := range players {
+		fn, ln := faker.FirstName(), faker.LastName()
+		p := &Player{
+			FirstName: fn,
+			LastName:  ln,
+			Base: Base{
+				Name: fmt.Sprintf("%s %s", fn, ln),
+				ID:   xid.New(),
+			},
+			PowerScores: make(map[string]int),
+			IsSeed:      true,
+		}
+
 		for _, s := range skillsList {
 			p.PowerScores[s] = faker.IntInRange(1, 10)
 		}
 
-		p.IsSeed = true
+		players[i] = p
 	}
 
 	return players

@@ -85,6 +85,7 @@ func InitDB(dbConfig Config) *gorm.DB {
 
 func initTables(db *gorm.DB) {
 	initSportsTable(db)
+	deleteAllSeedPlayers(db)
 	initPlayersTable(db)
 }
 
@@ -93,7 +94,7 @@ func initPlayersTable(db *gorm.DB) {
 
 	db.AutoMigrate(&models.Player{})
 	for _, p := range models.GenerateSeedPlayers() {
-		if err := InsertPlayer(db, &p); err != nil {
+		if err := InsertPlayer(db, p); err != nil {
 			log.Warn(err)
 		}
 	}
