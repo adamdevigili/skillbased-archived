@@ -14,7 +14,7 @@ type Base struct {
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 }
 
-var skillsList = []string{
+var SkillsList = []string{
 	"handling",
 	"power",
 	"speed",
