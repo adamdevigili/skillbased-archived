@@ -3,8 +3,8 @@ package models
 import (
 	"encoding/json"
 
-	"github.com/jinzhu/gorm"
 	"github.com/jinzhu/gorm/dialects/postgres"
+	"gorm.io/gorm"
 )
 
 type Player struct {
@@ -19,11 +19,14 @@ type Player struct {
 	PowerScores   map[string]int `gorm:"-" json:"power_scores"`
 	PowerScoresDB postgres.Jsonb `json:"-"`
 
-	IsSeed bool `json:"-"`
+	// TeamID string
+
+	Teams []*Team `gorm:"many2many:player_teams;"`
+	// Groups []*PlayerGroup `gorm:"many2many:player_groups;"`
 }
 
 // BeforeCreate is a GORM hook that is used to convert the Go map to a JSON struct to be stored in postgres
-func (p *Player) BeforeCreate(scope *gorm.Scope) (err error) {
+func (p *Player) BeforeCreate(db *gorm.DB) (err error) {
 	if x, err := json.Marshal(p.PowerScores); err != nil {
 		return err
 	} else {
@@ -33,9 +36,18 @@ func (p *Player) BeforeCreate(scope *gorm.Scope) (err error) {
 	return
 }
 
+// PlayerList is the wrapper object given back to the user
 type PlayerList struct {
-	NumItems int      `json:"num_items"`
-	Items    []Player `json:"items"`
+	NumItems int       `json:"num_items"`
+	Items    []*Player `json:"items"`
+}
+
+// PlayerGroup is a collection of players, referenced by ID
+type PlayerGroup struct {
+	Base
+	Players []*Player
+
+	IsSeed bool `json:"-"`
 }
 
 type SkillMap map[string]int

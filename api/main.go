@@ -5,7 +5,6 @@ import (
 
 	"github.com/adamdevigili/skillbased/api/pkg/db"
 	"github.com/adamdevigili/skillbased/api/pkg/server"
-	dotenv "github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
@@ -20,9 +19,6 @@ type Config struct {
 func main() {
 	// Create new Echo server
 	e := echo.New()
-
-	// Load env vars for configuration
-	dotenv.Load(".env")
 
 	var dbConfig db.Config
 	err := envconfig.Process("db", &dbConfig)

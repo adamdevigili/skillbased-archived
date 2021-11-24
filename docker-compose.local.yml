@@ -3,7 +3,8 @@ version: '3.8'
 services:
   # Go API
   api:
-    image: adamdevigili/skillbased:api
+    build: ./api
+    # image: adamdevigili/skillbased:api
     restart: always
     ports:
       - "8080:8080"
@@ -14,6 +15,7 @@ services:
 
   # Node/NextJS
   frontend:
+    # build: ./frontend
     image: adamdevigili/skillbased:frontend
     restart: always
     ports:

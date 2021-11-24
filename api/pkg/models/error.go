@@ -3,6 +3,9 @@ package models
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/adamdevigili/skillbased/api/pkg/constants"
+	"github.com/labstack/echo/v4"
 )
 
 // Errors is the collection of errors returned to a caller
@@ -19,11 +22,21 @@ type Error struct {
 }
 
 // GenNotFoundError generates a "not found" HTTP error to return to a caller
-func GenNotFoundError(resource, resourceID, requestID string) Error {
+func GenGenericError(c echo.Context, resource, action string) Error {
+	return Error{
+		Status:    http.StatusInternalServerError,
+		Message:   "internal server error",
+		Detail:    "error when fetching sport from database",
+		RequestID: c.Get(constants.RequestIDKey).(string),
+	}
+}
+
+// GenNotFoundError generates a "not found" HTTP error to return to a caller
+func GenNotFoundError(c echo.Context, resource, resourceID string) Error {
 	return Error{
 		Status:    http.StatusNotFound,
 		Message:   fmt.Sprintf("%s with ID '%s' not found", resource, resourceID),
 		Detail:    "please check the provided ID is correct and try again",
-		RequestID: requestID,
+		RequestID: c.Get(constants.RequestIDKey).(string),
 	}
 }

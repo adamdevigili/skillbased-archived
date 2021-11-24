@@ -4,15 +4,18 @@ import (
 	"fmt"
 
 	"github.com/adamdevigili/skillbased/api/pkg/models"
+	"github.com/labstack/gommon/log"
 	"github.com/pioz/faker"
 	"github.com/segmentio/ksuid"
+	"gorm.io/gorm"
 )
 
 var (
 	ultimateFrisbee = models.Sport{
 		Base: models.Base{
-			Name: "Ultimate Frisbee",
-			ID:   ksuid.New().String(),
+			Name:   "Ultimate Frisbee",
+			ID:     ksuid.New().String(),
+			IsSeed: true,
 		},
 		SkillWeights: models.SkillWeightMap{
 			"handling": 0.9,
@@ -26,8 +29,9 @@ var (
 
 	football = models.Sport{
 		Base: models.Base{
-			Name: "Football",
-			ID:   ksuid.New().String(),
+			Name:   "Football",
+			ID:     ksuid.New().String(),
+			IsSeed: true,
 		},
 		SkillWeights: models.SkillWeightMap{
 			"strength": 0.7,
@@ -41,8 +45,9 @@ var (
 
 	basketball = models.Sport{
 		Base: models.Base{
-			Name: "Basketball",
-			ID:   ksuid.New().String(),
+			Name:   "Basketball",
+			ID:     ksuid.New().String(),
+			IsSeed: true,
 		},
 		SkillWeights: models.SkillWeightMap{
 			"shooting": 0.9,
@@ -74,11 +79,11 @@ func generateSeedPlayers() []*models.Player {
 			FirstName: fn,
 			LastName:  ln,
 			Base: models.Base{
-				Name: fmt.Sprintf("%s %s", fn, ln),
-				ID:   ksuid.New().String(),
+				Name:   fmt.Sprintf("%s %s", fn, ln),
+				ID:     ksuid.New().String(),
+				IsSeed: true,
 			},
 			PowerScores: make(map[string]int),
-			IsSeed:      true,
 		}
 
 		for _, s := range models.SkillsList {
@@ -89,4 +94,34 @@ func generateSeedPlayers() []*models.Player {
 	}
 
 	return players
+}
+
+func generateSeedTeams(seedPlayers []*models.Player, db *gorm.DB) []*models.Team {
+	teamSize := 5
+	numTeams := len(seedPlayers) / teamSize
+	teams := make([]*models.Team, numTeams)
+
+	log.Infof("%+v", teams, teamSize, numTeams, len(seedPlayers))
+	currPlayer := 0
+	for i := range teams {
+		t := &models.Team{
+			Base: models.Base{
+				Name:   faker.ColorName(),
+				ID:     ksuid.New().String(),
+				IsSeed: true,
+			},
+		}
+
+		for i := currPlayer; i < currPlayer+i; i++ {
+			// t.Players = append(t.Players, seedPlayers[i])
+			db.Model(t).Association("Players").Append()
+			db.Model(seedPlayers[i]).Association("Teams").Append(seedPlayers[i])
+		}
+
+		log.Infof("generated team: %+v", t)
+
+		teams[i] = t
+	}
+
+	return teams
 }

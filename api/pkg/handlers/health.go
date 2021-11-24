@@ -12,6 +12,7 @@ import (
 func (h *Handler) Health(c echo.Context) error {
 	log.Info()
 	return c.JSON(http.StatusOK, models.Health{
-		Status: "healthy",
+		Status:  "healthy",
+		Version: "v0.0.1",
 	})
 }
