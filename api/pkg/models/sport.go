@@ -12,9 +12,14 @@ type SkillWeightMap map[string]float32
 
 type Sport struct {
 	Base
-	SkillWeights      SkillWeightMap `gorm:"-" json:"skills"` // Ignore this field for DB
-	SkillWeightsDB    postgres.Jsonb `json:"-"`               // Ignore this field for JSON
-	MaxPlayersPerTeam int            `json:"max_players_per_team"`
+	SkillWeights   SkillWeightMap `gorm:"-" json:"skills"` // Ignore this field for DB
+	SkillWeightsDB postgres.Jsonb `json:"-"`               // Ignore this field for JSON
+
+	// MaxPlayersPerTeam is the maximum number of players on a single team, including substitutes
+	MaxPlayersPerTeam int `json:"max_players_per_team"`
+
+	// MaxPlayersPerTeam is the maximum number of actively playing players on a single team
+	MaxActivePlayersPerTeam int `json:"max_active_per_team"`
 }
 
 // BeforeCreate is a GORM hook that is used to convert the Go map to a JSON struct to be stored in postgres
@@ -41,7 +46,7 @@ func (s *Sport) BeforeCreate(scope *gorm.Scope) (err error) {
 // AfterFind is a GORM hook that is used to convert the JSON struct in postgres to the Go map to be returned to the user
 // and operated on by the balancer algorithm
 func (s *Sport) AfterFind() (err error) {
-	fmt.Println("AfterFind called on " + s.ID.String())
+	fmt.Println("AfterFind called on " + s.ID)
 	if err := json.Unmarshal(s.SkillWeightsDB.RawMessage, &s.SkillWeights); err != nil {
 		return err
 	}

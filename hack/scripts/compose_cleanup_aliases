@@ -1,0 +1,10 @@
+alias dc='docker-compose'
+alias dcu='docker-compose up'
+alias dcd='docker-compose down'
+alias dcps='docker-compose ps'
+
+alias dv='docker volume'
+alias dvp='docker volume prune'
+
+alias dn='docker network'
+alias dnp='docker network prune'
