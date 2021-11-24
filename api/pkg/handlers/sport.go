@@ -60,7 +60,7 @@ func (h *Handler) GetSport(c echo.Context) error {
 		e := models.Errors{Errors: []models.Error{}}
 
 		if strings.Contains(err.Error(), "not found") {
-			e.Errors = append(e.Errors, models.GenNotFoundError("sport", id, getRequestID(c)))
+			e.Errors = append(e.Errors, models.GenNotFoundError(c, "sport", id))
 			code = http.StatusNotFound
 		} else {
 			e.Errors = append(e.Errors, models.Error{
@@ -85,7 +85,7 @@ func (h *Handler) ListSports(c echo.Context) error {
 			{
 				Status:    http.StatusInternalServerError,
 				Message:   "internal server error",
-				Detail:    "error when storing sport in database",
+				Detail:    "error when storing listing sports",
 				RequestID: c.Response().Header().Get(echo.HeaderXRequestID),
 			},
 		}}
@@ -120,22 +120,17 @@ func (h *Handler) UpdateSport(c echo.Context) error {
 	if err != nil {
 		log.Errorf("Unable to update sport: %v", err)
 
-		code := http.StatusInternalServerError
-		e := models.Errors{Errors: []models.Error{}}
-
 		if strings.Contains(err.Error(), "not found") {
-			e.Errors = append(e.Errors, models.GenNotFoundError("sport", id, c.Get(constants.RequestIDKey).(string)))
-			code = http.StatusNotFound
+			return c.JSON(
+				http.StatusNotFound,
+				models.GenNotFoundError(c, "sport", id),
+			)
 		} else {
-			e.Errors = append(e.Errors, models.Error{
-				Status:    http.StatusInternalServerError,
-				Message:   "internal server error",
-				Detail:    "error when fetching sport from database",
-				RequestID: c.Response().Header().Get(echo.HeaderXRequestID),
-			})
+			return c.JSON(
+				http.StatusInternalServerError,
+				models.GenGenericError(c, "sport", "fetching"),
+			)
 		}
-
-		return c.JSON(code, e)
 	}
 
 	return c.JSON(http.StatusOK, sport)
@@ -149,7 +144,7 @@ func (h *Handler) DeleteSport(c echo.Context) error {
 		if strings.Contains(err.Error(), "not found") {
 			return c.JSON(
 				http.StatusNotFound,
-				models.GenNotFoundError("sport", id, c.Get(constants.RequestIDKey).(string)),
+				models.GenNotFoundError(c, "sport", id),
 			)
 		}
 

@@ -42,17 +42,18 @@ func (h *Handler) GetTeam(c echo.Context) error {
 	id := c.Param(constants.URIKeyID)
 	team, ok := db.TeamsMem[id]
 	if !ok {
-		return c.JSON(http.StatusNotFound, models.GenNotFoundError("team", id, c.Get(constants.RequestIDKey).(string)))
+		return c.JSON(http.StatusNotFound, models.GenNotFoundError(c, "team", id))
 	}
 
 	return c.JSON(http.StatusOK, team)
 }
 
-// ListTeams list all existing teams
+// ListSports list all existing teams
 func (h *Handler) ListTeams(c echo.Context) error {
-	teamList := make([]models.Team, len(db.SportsMem))
-	for _, t := range db.TeamsMem {
-		teamList = append(teamList, *t)
+	teamList, err := db.ListTeams(h.DB)
+	if err != nil {
+		log.Error(err)
+		return c.JSON(http.StatusInternalServerError, models.GenGenericError(c, "teams", "listing"))
 	}
 
 	return c.JSON(http.StatusOK, teamList)
@@ -66,7 +67,7 @@ func (h *Handler) GenerateTeams(c echo.Context) error {
 		e := models.Errors{Errors: []models.Error{
 			{
 				Status:    http.StatusBadRequest,
-				Message:     "failed to bind JSON",
+				Message:   "failed to bind JSON",
 				Detail:    "please check your JSON structure",
 				RequestID: c.Request().Header.Get(echo.HeaderXRequestID),
 			},
@@ -80,7 +81,7 @@ func (h *Handler) GenerateTeams(c echo.Context) error {
 		e := models.Errors{Errors: []models.Error{
 			{
 				Status:    http.StatusBadRequest,
-				Message:     fmt.Sprintf("sport with id %s not found", t.SportID),
+				Message:   fmt.Sprintf("sport with id %s not found", t.SportID),
 				Detail:    "please check the provided ID is correct and try again",
 				RequestID: c.Request().Header.Get(echo.HeaderXRequestID),
 			},
@@ -100,7 +101,7 @@ func (h *Handler) UpdateTeam(c echo.Context) error {
 func (h *Handler) DeleteTeam(c echo.Context) error {
 	id := c.Param("id")
 	if _, ok := db.TeamsMem[id]; !ok {
-		return c.JSON(http.StatusNotFound, models.GenNotFoundError("team", id, c.Get(constants.RequestIDKey).(string)))
+		return c.JSON(http.StatusNotFound, models.GenNotFoundError(c, "team", id))
 	}
 
 	delete(db.TeamsMem, id)

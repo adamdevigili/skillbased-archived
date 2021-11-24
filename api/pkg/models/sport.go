@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/jinzhu/gorm"
 	"github.com/jinzhu/gorm/dialects/postgres"
+	"gorm.io/gorm"
 )
 
 type SkillWeightMap map[string]float32
@@ -23,7 +23,7 @@ type Sport struct {
 }
 
 // BeforeCreate is a GORM hook that is used to convert the Go map to a JSON struct to be stored in postgres
-func (s *Sport) BeforeCreate(scope *gorm.Scope) (err error) {
+func (s *Sport) BeforeCreate(db *gorm.DB) (err error) {
 	if x, err := json.Marshal(s.SkillWeights); err != nil {
 		return err
 	} else {
@@ -45,7 +45,7 @@ func (s *Sport) BeforeCreate(scope *gorm.Scope) (err error) {
 
 // AfterFind is a GORM hook that is used to convert the JSON struct in postgres to the Go map to be returned to the user
 // and operated on by the balancer algorithm
-func (s *Sport) AfterFind() (err error) {
+func (s *Sport) AfterFind(db *gorm.DB) (err error) {
 	fmt.Println("AfterFind called on " + s.ID)
 	if err := json.Unmarshal(s.SkillWeightsDB.RawMessage, &s.SkillWeights); err != nil {
 		return err
@@ -55,6 +55,6 @@ func (s *Sport) AfterFind() (err error) {
 }
 
 type SportList struct {
-	NumItems int     `json:"num_items"`
-	Items    []Sport `json:"items"`
+	NumItems int      `json:"num_items"`
+	Items    []*Sport `json:"items"`
 }

@@ -1,10 +1,11 @@
 package db
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/adamdevigili/skillbased/api/pkg/models"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 func InsertSport(db *gorm.DB, sport *models.Sport) error {
@@ -13,7 +14,7 @@ func InsertSport(db *gorm.DB, sport *models.Sport) error {
 
 func GetSport(db *gorm.DB, id string) (*models.Sport, error) {
 	sport := &models.Sport{}
-	if db.Where("id = ?", id).First(sport).RecordNotFound() {
+	if err := db.Where("id = ?", id).First(sport).Error; errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, fmt.Errorf("sport not found")
 	}
 
@@ -39,7 +40,7 @@ func UpdateSport(db *gorm.DB, sport *models.Sport) (*models.Sport, error) {
 }
 
 func DeleteSport(db *gorm.DB, id string) error {
-	if db.Where("id = ?", id).First(&models.Sport{}).RecordNotFound() {
+	if err := db.Where("id = ?", id).First(&models.Sport{}).Error; errors.Is(err, gorm.ErrRecordNotFound) {
 		return fmt.Errorf("sport not found")
 	} else {
 		fmt.Println("ya")

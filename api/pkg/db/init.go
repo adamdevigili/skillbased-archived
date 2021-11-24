@@ -4,14 +4,10 @@ import (
 	"fmt"
 
 	"github.com/adamdevigili/skillbased/api/pkg/models"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/labstack/gommon/log"
-	_ "github.com/lib/pq"
-)
-
-const (
-	dbConnRetryLimit = 5
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
+	// _ "github.com/lib/pq"
 )
 
 // Environment variables to configure target DB. All are required. Will be looked for with the "PG_" prefix
@@ -54,7 +50,7 @@ func InitDB(dbConfig Config) *gorm.DB {
 
 	// Connect to the default "postgres" database first
 	log.Infof("Attempting initial connection to database", defaultConnStr)
-	db, err := gorm.Open("postgres", defaultConnStr)
+	db, err := gorm.Open(postgres.Open(defaultConnStr), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("Unable to connect to database with default settings: %v", err)
 	}
@@ -64,7 +60,7 @@ func InitDB(dbConfig Config) *gorm.DB {
 	db.Exec(fmt.Sprintf("CREATE DATABASE %s;", dbConfig.Database))
 
 	// Connect to the "skillbased" database
-	db, err = gorm.Open("postgres", connStr)
+	db, err = gorm.Open(postgres.Open(connStr), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("Unable to connect to main database: %v", err)
 	}
@@ -84,16 +80,24 @@ func InitDB(dbConfig Config) *gorm.DB {
 }
 
 func initTables(db *gorm.DB) {
+	log.Info("initializing tables")
+	seedPlayers := generateSeedPlayers()
+	initPlayersTable(db, seedPlayers)
+	seedTeams := generateSeedTeams(seedPlayers, db)
 	initSportsTable(db)
+	initTeamsTable(db, seedTeams)
 	deleteAllSeedPlayers(db)
-	initPlayersTable(db)
+
 }
 
-func initPlayersTable(db *gorm.DB) {
+func initPlayersTable(db *gorm.DB, seedPlayers []*models.Player) {
 	log.Info("Populating players database with initial values..")
 
-	db.AutoMigrate(&models.Player{})
-	for _, p := range generateSeedPlayers() {
+	if err := db.AutoMigrate(&models.Player{}); err != nil {
+		log.Fatalf("Unable to migrate schema: %v", err)
+	}
+
+	for _, p := range seedPlayers {
 		if err := InsertPlayer(db, p); err != nil {
 			log.Warn(err)
 		}
@@ -108,9 +112,26 @@ func deleteAllSeedPlayers(db *gorm.DB) {
 func initSportsTable(db *gorm.DB) {
 	log.Info("Populating sports database with initial values..")
 
-	db.AutoMigrate(&models.Sport{})
+	if err := db.AutoMigrate(&models.Sport{}); err != nil {
+		log.Fatalf("Unable to migrate schema: %v", err)
+	}
+
 	for _, s := range initialSports {
 		if err := InsertSport(db, &s); err != nil {
+			log.Warn(err)
+		}
+	}
+}
+
+func initTeamsTable(db *gorm.DB, seedTeams []*models.Team) {
+	log.Info("Initializing Teams table..")
+
+	if err := db.AutoMigrate(&models.Team{}); err != nil {
+		log.Fatalf("Unable to migrate schema: %v", err)
+	}
+
+	for _, t := range seedTeams {
+		if err := InsertTeam(db, t); err != nil {
 			log.Warn(err)
 		}
 	}

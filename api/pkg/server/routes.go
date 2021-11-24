@@ -5,9 +5,9 @@ import (
 
 	"github.com/adamdevigili/skillbased/api/pkg/constants"
 	"github.com/adamdevigili/skillbased/api/pkg/handlers"
-	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"gorm.io/gorm"
 )
 
 // InitRoutes sets up the API routes, handlers, and middleware
@@ -30,6 +30,7 @@ func InitRoutes(e *echo.Echo, db *gorm.DB) {
 	// Teams
 	v1.POST("/teams", h.CreateTeam)
 	v1.GET(fmt.Sprintf("/teams/:%s", constants.URIKeyID), h.GetTeam)
+	v1.GET("/teams", h.ListTeams)
 	v1.DELETE(fmt.Sprintf("/teams/:%s", constants.URIKeyID), h.DeleteTeam)
 
 	v1.PUT("/teams/generate", h.GenerateTeams)
