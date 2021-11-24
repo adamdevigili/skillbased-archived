@@ -13,8 +13,8 @@ import (
 
 type Config struct {
 	Port     int    `default:"8080"`
-	TokenKey string `default:"false"`
-	DevMode  bool   `default:"false"`
+	TokenKey string `envconfig:"TOKEN_KEY"`
+	DevMode  bool   `envconfig:"DEV_MODE" default:"false"`
 }
 
 func main() {
@@ -34,6 +34,11 @@ func main() {
 	err = envconfig.Process("", &config)
 	if err != nil {
 		log.Fatal(err.Error())
+	}
+
+	if config.DevMode {
+		log.Info("starting server in development mode")
+		dbConfig.DevMode = config.DevMode
 	}
 
 	// Initialize DB and routes

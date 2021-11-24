@@ -8,7 +8,7 @@ services:
     ports:
       - "8080:8080"
     env_file:
-      - .env.${SKILLBASED_ENV}
+      - .env.local
     links:
     - db
 
@@ -21,36 +21,36 @@ services:
     depends_on:
       - api
     env_file:
-      - .env.${SKILLBASED_ENV}
+      - .env.local
 
   # Proxies requests to internal services
-  nginx:
-    image: adamdevigili/skillbased:nginx
-    restart: always
-    depends_on:
-      - frontend
-      - api
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - web-root:/var/www/html
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
-      - dhparam:/etc/ssl/certs
-    env_file:
-      - .env.${SKILLBASED_ENV}
+  # nginx:
+  #   image: adamdevigili/skillbased:nginx
+  #   restart: always
+  #   depends_on:
+  #     - frontend
+  #     - api
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - web-root:/var/www/html
+  #     - certbot-etc:/etc/letsencrypt
+  #     - certbot-var:/var/lib/letsencrypt
+  #     - dhparam:/etc/ssl/certs
+  #   env_file:
+  #     - .env.local
 
   # Auto TLS
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
-      - web-root:/var/www/html
-    depends_on:
-      - nginx
-    command: certonly --webroot --webroot-path=/var/www/html --email adamdevigili@skillbased.xyz --agree-tos --no-eff-email --force-renewal -d skillbased.xyz -d www.skillbased.xyz -d api.skillbased.xyz
+  # certbot:
+  #   image: certbot/certbot
+  #   volumes:
+  #     - certbot-etc:/etc/letsencrypt
+  #     - certbot-var:/var/lib/letsencrypt
+  #     - web-root:/var/www/html
+  #   depends_on:
+  #     - nginx
+  #   command: certonly --webroot --webroot-path=/var/www/html --email adamdevigili@skillbased.xyz --agree-tos --no-eff-email --force-renewal -d skillbased.xyz -d www.skillbased.xyz -d api.skillbased.xyz
 
   db:
     image: postgres:14-alpine

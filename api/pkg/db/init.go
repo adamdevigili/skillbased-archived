@@ -39,7 +39,7 @@ func InitDB(dbConfig Config) *gorm.DB {
 		dbConfig.Password,
 	)
 
-	log.Info(dbConfig)
+	log.Info(fmt.Sprintf("%+v", dbConfig))
 
 	// If we're using a development Postgres, disable TLS
 	if dbConfig.DevMode {
@@ -98,6 +98,11 @@ func initPlayersTable(db *gorm.DB) {
 			log.Warn(err)
 		}
 	}
+}
+
+func deleteAllSeedPlayers(db *gorm.DB) {
+	log.Info("deleteing all seed players from existing DB")
+	db.Where("is_seed = ?", "t").Delete(&models.Player{})
 }
 
 func initSportsTable(db *gorm.DB) {

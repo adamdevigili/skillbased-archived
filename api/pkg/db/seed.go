@@ -5,14 +5,14 @@ import (
 
 	"github.com/adamdevigili/skillbased/api/pkg/models"
 	"github.com/pioz/faker"
-	"github.com/rs/xid"
+	"github.com/segmentio/ksuid"
 )
 
 var (
 	ultimateFrisbee = models.Sport{
 		Base: models.Base{
 			Name: "Ultimate Frisbee",
-			ID:   xid.New(),
+			ID:   ksuid.New().String(),
 		},
 		SkillWeights: models.SkillWeightMap{
 			"handling": 0.9,
@@ -20,12 +20,14 @@ var (
 			"stamina":  0.8,
 			"height":   0.4,
 		},
+		MaxPlayersPerTeam:       15,
+		MaxActivePlayersPerTeam: 7,
 	}
 
 	football = models.Sport{
 		Base: models.Base{
 			Name: "Football",
-			ID:   xid.New(),
+			ID:   ksuid.New().String(),
 		},
 		SkillWeights: models.SkillWeightMap{
 			"strength": 0.7,
@@ -33,12 +35,14 @@ var (
 			"stamina":  0.8,
 			"agility":  0.5,
 		},
+		MaxPlayersPerTeam:       50,
+		MaxActivePlayersPerTeam: 11,
 	}
 
 	basketball = models.Sport{
 		Base: models.Base{
 			Name: "Basketball",
-			ID:   xid.New(),
+			ID:   ksuid.New().String(),
 		},
 		SkillWeights: models.SkillWeightMap{
 			"shooting": 0.9,
@@ -47,6 +51,8 @@ var (
 			"height":   0.8,
 			"passing":  0.5,
 		},
+		MaxPlayersPerTeam:       12,
+		MaxActivePlayersPerTeam: 5,
 	}
 
 	initialSports = []models.Sport{
@@ -69,7 +75,7 @@ func generateSeedPlayers() []*models.Player {
 			LastName:  ln,
 			Base: models.Base{
 				Name: fmt.Sprintf("%s %s", fn, ln),
-				ID:   xid.New(),
+				ID:   ksuid.New().String(),
 			},
 			PowerScores: make(map[string]int),
 			IsSeed:      true,

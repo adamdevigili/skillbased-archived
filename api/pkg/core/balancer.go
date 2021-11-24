@@ -70,7 +70,7 @@ func calcPlayerPowerScoreForSport(player models.Player, sport models.Sport) floa
 	var powerScore float32
 
 	for skill, weight := range sport.SkillWeights {
-		powerScore += float32(player.Skills[sport.ID.String()][skill]) * weight
+		powerScore += float32(player.Skills[sport.ID][skill]) * weight
 	}
 
 	return powerScore

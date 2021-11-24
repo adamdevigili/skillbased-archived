@@ -9,7 +9,7 @@ import (
 	"github.com/adamdevigili/skillbased/api/pkg/models"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
-	"github.com/rs/xid"
+	"github.com/segmentio/ksuid"
 )
 
 // CreateSport creates a sport
@@ -28,7 +28,7 @@ func (h *Handler) CreateSport(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, e)
 	}
 
-	s.ID = xid.New()
+	s.ID = ksuid.New().String()
 
 	if err := db.InsertSport(h.DB, s); err != nil {
 		e := models.Errors{Errors: []models.Error{
@@ -114,7 +114,7 @@ func (h *Handler) UpdateSport(c echo.Context) error {
 
 	id := c.Param(constants.URIKeyID)
 
-	s.ID, _ = xid.FromString(id)
+	s.ID = id
 
 	sport, err := db.UpdateSport(h.DB, s)
 	if err != nil {

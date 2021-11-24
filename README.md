@@ -3,7 +3,12 @@
 
 [skillbased](http://skillbased.xyz) is a service that is aimed to provide players of casual, "pick-up" type sports to quickly and easily create balanced teams for their activity, and save those teams to create elevated levels of competition.
 
-Deploy locally with: `docker-compose -f docker-compose.yml up --build`
+## Development
+
+Rename the `.env` file to `.env.local`. The default values should allow the API and postgres to start, however to
+enable Auth0 on the frontend, you'll need to supply your own credentials to their corresponding environment variables
+
+Build and run the API, frontend, and a postgres database locally with: `docker-compose -f docker-compose.local.yml up --build`
 
 ## Tech
 ### Stack
