@@ -7,7 +7,7 @@ services:
     ports:
       - "8080:8080"
     env_file:
-      - ./api/.env.prod
+      - .env.prod
 
   frontend:
     image: adamdevigili/skillbased:frontend
@@ -16,7 +16,7 @@ services:
     depends_on:
       - api
     env_file:
-      - ./frontend/.env
+      - .env.prod
   # Proxies requests to internal services
   nginx:
     image: adamdevigili/skillbased:nginx
@@ -25,6 +25,8 @@ services:
       - api
     ports:
       - "80:80"
+    env_file:
+      - .env.prod
 
 #  nginx:
 #    image: adamdevigili/skillbased:nginx
