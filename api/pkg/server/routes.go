@@ -2,8 +2,6 @@ package server
 
 import (
 	"fmt"
-	"net/http"
-
 	"github.com/adamdevigili/skillbased/api/pkg/constants"
 	"github.com/adamdevigili/skillbased/api/pkg/handlers"
 	"github.com/jinzhu/gorm"
@@ -12,7 +10,7 @@ import (
 )
 
 // InitRoutes sets up the API routes, handlers, and middleware
-func InitRoutes(e *echo.Echo, db *gorm.DB, static *http.Handler) {
+func InitRoutes(e *echo.Echo, db *gorm.DB) {
 	h := &handlers.Handler{
 		DB: db,
 	}
@@ -21,8 +19,6 @@ func InitRoutes(e *echo.Echo, db *gorm.DB, static *http.Handler) {
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORS())
 	e.Use(middleware.RequestID())
-
-	e.GET("/*", echo.WrapHandler(*static))
 
 	apiGroup := e.Group("/v1")
 

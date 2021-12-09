@@ -6,43 +6,46 @@ import (
 	"github.com/adamdevigili/skillbased/api/pkg/models"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	dotenv "github.com/joho/godotenv"
-	"github.com/kelseyhightower/envconfig"
 	"github.com/labstack/gommon/log"
 	_ "github.com/lib/pq"
 )
 
 const (
 	dbConnRetryLimit = 5
-	defaultDatabase  = "postgres"
 )
 
 // Environment variables to configure target DB. All are required. Will be looked for with the "PG_" prefix
-type dbConfig struct {
+type Config struct {
 	Host     string `required:"true"`
 	Port     uint16 `required:"true"`
 	User     string `required:"true"`
 	Database string `required:"true"`
+	Default  string `default:"postgres"`
 	Password string `required:"true"`
-	DevMode  bool   `required:"false" default:"false"`
+	DevMode  bool   `default:"false"`
+	Disabled bool   `default:"false"`
 }
 
 // InitDB connects to the Postgres database, and initializes it where required
-func InitDB() *gorm.DB {
+func InitDB(dbConfig Config) *gorm.DB {
 	// return nil
 
-	var dbConfig dbConfig
+	// var dbConfig dbConfig
 
-	dotenv.Load(".env")
+	// dotenv.Load(".env")
 
 	// for _, e := range os.Environ() {
 	// 	pair := strings.SplitN(e, "=", 2)
 	// 	fmt.Println(pair[0])
 	// }
 
-	err := envconfig.Process("pg", &dbConfig)
-	if err != nil {
-		log.Fatal(err.Error())
+	// err := envconfig.Process("pg", &dbConfig)
+	// if err != nil {
+	// 	log.Fatal(err.Error())
+	// }
+
+	if dbConfig.Disabled {
+		return nil
 	}
 
 	baseConnStr := fmt.Sprintf("host=%s port=%d user=%s password=%s",
@@ -59,13 +62,13 @@ func InitDB() *gorm.DB {
 
 	connStr := fmt.Sprintf("dbname=%s ", dbConfig.Database) + baseConnStr
 
-	defaultConnStr := fmt.Sprintf("dbname=%s ", defaultDatabase) + baseConnStr
+	defaultConnStr := fmt.Sprintf("dbname=%s ", dbConfig.Default) + baseConnStr
 
 	var db *gorm.DB
 
 	// Connect to the default "postgres" database first
 	log.Infof("Attempting initial connection to database", defaultConnStr)
-	db, err = gorm.Open("postgres", defaultConnStr)
+	db, err := gorm.Open("postgres", defaultConnStr)
 	if err != nil {
 		log.Fatalf("Unable to connect to database with default settings: %v", err)
 	}
