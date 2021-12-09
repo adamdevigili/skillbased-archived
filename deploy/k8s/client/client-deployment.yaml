@@ -1,19 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: client-deployment
+  name: client-deployment
 spec:
-    replicas: 1
-    selector:
-        matchLabels:
-            component: client
-    template:
-        metadata:
-            labels:
-                component: client
-        spec:
-            containers:
-                -   name: client
-                    image: adamdevigili/balancer.team-frontend:latest
-                    ports:
-                        - containerPort: 3000
+  replicas: 1
+  selector:
+    matchLabels:
+      component: client
+  template:
+    metadata:
+      labels:
+        component: client
+    spec:
+      containers:
+        - name: client
+          image: 'adamdevigili/balancer.team-frontend:latest'
+          imagePullPolicy: 'Always'
+          ports:
+            - containerPort: 3000

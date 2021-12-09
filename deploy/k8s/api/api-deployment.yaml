@@ -15,6 +15,7 @@ spec:
       containers:
         - name: api
           image: adamdevigili/balancer.team-api:latest
+            imagePullPolicy: 'Always'
           ports:
             - containerPort: 8080
           env:
