@@ -9,4 +9,4 @@ COPY ./go.mod .
 RUN go mod download
 
 COPY . .
-CMD ["go", "run", "cmd/main.go"]
+CMD ["go", "run", "cmd/api/main.go"]
