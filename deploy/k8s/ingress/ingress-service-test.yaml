@@ -10,12 +10,14 @@ spec:
   - host: balancer.team
     http:
       paths:
-      - backend:
+      - path: /
+        backend:
           serviceName: client-service
           servicePort: 3000
   - host: api.balancer.team
     http:
       paths:
-      - backend:
+      - path: /
+        backend:
           serviceName: api-service
           servicePort: 8080

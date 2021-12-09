@@ -52,7 +52,6 @@ func main() {
 	// for i, team := range madeTeams {
 	// 	fmt.Println(fmt.Sprintf("Team %d: %+v", i+1, team))
 	// }
-
 }
 
 func makeTeams(players []Player, numTeams int) {

@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api-deployment
+  name: api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      component: api
+      app: api
   template:
     metadata:
       labels:
-        component: api
+        app: api
     spec:
       containers:
         - name: api
           image: adamdevigili/balancer.team-api:latest
-            imagePullPolicy: 'Always'
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:

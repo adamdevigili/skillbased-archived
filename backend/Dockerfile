@@ -1,12 +1,27 @@
-FROM golang:latest
+#FROM golang:latest
+#
+#ENV GO111MODULE=on
+#WORKDIR /app
+#COPY ./go.mod .
+#RUN go mod download
+#COPY . .
+#CMD ["go", "run", "cmd/api/main.go"]
 
-ENV GO111MODULE=on
-
+FROM golang:latest as build-env
+# All these steps will be cached
+RUN mkdir /app
 WORKDIR /app
+COPY go.mod .
+COPY go.sum .
 
-COPY ./go.mod .
-
+# Get dependancies - will also be cached if we won't change mod/sum
 RUN go mod download
-
+# COPY the source code as the last step
 COPY . .
-CMD ["go", "run", "cmd/api/main.go"]
+
+# Build the binary
+RUN cd cmd/api CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /go/bin/app
+
+#FROM alpine
+#COPY --from=build-env /go/bin/app /go/bin/app
+ENTRYPOINT ["/go/bin/app"]
