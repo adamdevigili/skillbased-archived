@@ -1,0 +1,2 @@
+docker build -t adamdevigili/skillbased:api . && docker push adamdevigili/skillbased:api
+docker build -t adamdevigili/skillbased:frontend . && docker push adamdevigili/skillbased:frontend

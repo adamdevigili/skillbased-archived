@@ -1,8 +1,10 @@
 # skillbased
 [![Go Report Card](https://goreportcard.com/badge/github.com/adamdevigili/skillbased.io)](https://goreportcard.com/report/github.com/adamdevigili/skillbased.io)
 
-[Skillbased](http://skillbased.xyz) is a service that is aimed to provide players of casual, "pick-up" type sports and activities to quickly and easily create balanced teams, and save those teams to create elevated levels of competition. Skillbased is designed to be generic,
-allowing an unlimited number of custom `Sports` and `Skills` to be added and modified.
+[Skillbased](http://skillbased.xyz) is a web application that is aimed to provide players of casual, "pick-up" type sports and activities to quickly and easily create balanced teams, and save those teams to create elevated levels of competition. This can be extended to more serious groups that play in "league" or "club" groups with the inclusion of seasons, rankings, tournaments, and statistics tracking.
+
+Skillbased is designed to be generic,
+allowing an unlimited number of custom sports and their required skills to be added and modified.
 
 ## Development
 
@@ -23,4 +25,10 @@ Build and run the API, frontend, and a postgres database locally with: `docker-c
 
 ### Other tools
 - API designer: [insomnia.rest](https://insomnia.rest/)
-- Diagraming: [lucid.app](https://lucid.app/)
+- Diagramming: [lucid.app](https://lucid.app/)
+
+## Warning
+This project is currently under development, and serves as a technology testbed for my other more serious projects. I promise that..
+
+- I will do my best to keep this application stable
+- Things can change at any time
